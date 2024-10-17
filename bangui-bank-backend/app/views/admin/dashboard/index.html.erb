@@ -1,0 +1,56 @@
+<h1>Admin Dashboard</h1>
+
+<!-- Logout link -->
+<%= link_to 'Sign Out', destroy_admin_session_path, method: :delete, data: { confirm: 'Are you sure?' } %>
+
+<p>Welcome to the admin dashboard!</p>
+
+<!-- Display total users and balance -->
+<h2>Total Users: <%= @users.count %></h2>
+<h2>Total Balance: $<%= @users.sum { |user| user.balance || 0.0 }.round(2) %></h2>
+
+<!-- Display recent payments -->
+<h3>Recent payments</h3>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Amount</th>
+      <th>Created At</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @recent_payments.each do |payment| %>
+      <tr>
+        <td><%= payment.id %></td>
+        <td>$<%= payment.amount %></td>
+        <td><%= payment.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<!-- Manage Users -->
+<h3>Manage Users</h3>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Email</th>
+      <th>Balance</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.email %></td>
+        <td><%= number_to_currency(user.balance || 0) %></td>
+        <td>
+          <%= link_to 'Add Money', add_money_admin_user_path(user) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
