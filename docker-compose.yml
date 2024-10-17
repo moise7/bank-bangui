@@ -40,7 +40,7 @@
 #   default:
 #     driver: bridge
 
-
+version: "3.7"
 services:
   db:
     image: postgres
