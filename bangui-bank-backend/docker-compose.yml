@@ -1,30 +1,30 @@
-services:
-  db:
-    image: postgres
-    environment:
-      POSTGRES_USER: bigvision
-      POSTGRES_PASSWORD: bigvision75
-      POSTGRES_DB: bangui_development
-    volumes:
-      - db_data:/var/lib/postgresql/data
+# services:
+#   db:
+#     image: postgres
+#     environment:
+#       POSTGRES_USER: bigvision
+#       POSTGRES_PASSWORD: bigvision75
+#       POSTGRES_DB: bangui_development
+#     volumes:
+#       - db_data:/var/lib/postgresql/data
 
-  web:
-    build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails db:migrate db:seed && bundle exec rails server -b 0.0.0.0"
-    volumes:
-      - .:/app
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
-    environment:
-      RAILS_ENV: development
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY}  # Reference the JWT secret key from the .env file
-      DATABASE_HOST: db
+#   web:
+#     build: .
+#     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails db:migrate db:seed && bundle exec rails server -b 0.0.0.0"
+#     volumes:
+#       - .:/app
+#     ports:
+#       - "3000:3000"
+#     depends_on:
+#       - db
+#     environment:
+#       RAILS_ENV: development
+#       JWT_SECRET_KEY: ${JWT_SECRET_KEY}  # Reference the JWT secret key from the .env file
+#       DATABASE_HOST: db
 
-volumes:
-  db_data:
+# volumes:
+#   db_data:
 
-networks:
-  default:
-    driver: bridge
+# networks:
+#   default:
+#     driver: bridge
