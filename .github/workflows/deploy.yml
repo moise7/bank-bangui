@@ -45,9 +45,14 @@ jobs:
           else
             echo "No relevant changes detected, skipping deployment."
             exit 0
-          fi  # <-- Added 'fi' to close the if block
+          fi
 
       - name: Deploy to Fly.io
-        run: flyctl deploy -a ${{ env.app_name }}
+        run: |
+          if [ -z "${{ env.app_name }}" ]; then
+            echo "Error: App name is not set, skipping deployment."
+            exit 1
+          fi
+          flyctl deploy -a ${{ env.app_name }}
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
