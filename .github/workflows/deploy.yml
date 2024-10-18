@@ -47,6 +47,10 @@ jobs:
             exit 0
           fi
 
+      # Debug: Check if the app_name is set
+      - name: Debug App Name
+        run: echo "App Name: ${{ env.app_name }}"
+
       - name: Deploy to Fly.io
         run: |
           if [ -z "${{ env.app_name }}" ]; then
