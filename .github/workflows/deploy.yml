@@ -4,15 +4,33 @@ on:
   push:
     branches:
       - main
-
-env:
-  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+    paths:
+      - 'frontend/**'  # Adjust according to your frontend directory
+      - 'backend/**'   # Adjust according to your backend directory
 
 jobs:
   deploy:
-      name: Deploy app
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - uses: superfly/flyctl-actions/setup-flyctl@master
-        - run: flyctl deploy
+    name: Deploy app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Determine app to deploy
+        id: app_name
+        run: |
+          if git diff --name-only HEAD^ | grep '^frontend/' > /dev/null; then
+            echo "app_name=bangui-bank-frontend" >> $GITHUB_ENV
+          elif git diff --name-only HEAD^ | grep '^backend/' > /dev/null; then
+            echo "app_name=bangui-bank-backend" >> $GITHUB_ENV
+          else
+            echo "No relevant changes detected, skipping deployment."
+            exit 0
+          fi
+
+      - name: Deploy to Fly.io
+        run: flyctl deploy --app ${{ env.app_name }}
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
