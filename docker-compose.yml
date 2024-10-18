@@ -65,6 +65,7 @@ services:
     environment:
       RAILS_ENV: development
       DATABASE_HOST: db
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
 
   frontend:
     build:

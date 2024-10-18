@@ -4,7 +4,7 @@ class Api::V1::SessionsController < ApplicationController
 
   def create
     user = User.find_by(username: session_params[:username])
-
+    Rails.logger.debug("User found: #{user.inspect}")
     if user && user.valid_password?(session_params[:password])
       jti = SecureRandom.uuid  # Generate a unique identifier for the JWT
       token = JwtService.encode(user_id: user.id, jti: jti) # Include the new jti in the token
@@ -14,6 +14,7 @@ class Api::V1::SessionsController < ApplicationController
 
       render json: { user: user.as_json(only: [:id, :username]), token: token }, status: :ok
     else
+      Rails.logger.debug("Invalid username or password.")
       render json: { error: 'Invalid username or password' }, status: :unauthorized
     end
   end
