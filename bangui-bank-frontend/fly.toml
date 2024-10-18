@@ -3,7 +3,7 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'bangui-bank-frontend'
+app = "bangui-bank-frontend"
 primary_region = 'ewr'
 
 [build]
