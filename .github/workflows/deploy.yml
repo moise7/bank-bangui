@@ -33,4 +33,4 @@ jobs:
           fi
 
       - name: Deploy to Fly.io
-        run: flyctl deploy --app ${{ env.app_name }} --config ./fly.toml
+        run: flyctl deploy
