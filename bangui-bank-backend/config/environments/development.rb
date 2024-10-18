@@ -24,6 +24,9 @@ Rails.application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
 
+  config.hosts << "bangui-bank-backend.fly.dev"
+  config.hosts << "localhost"
+
   # Show full error reports.
   config.consider_all_requests_local = true
 
