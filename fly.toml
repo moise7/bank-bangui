@@ -1,4 +1,4 @@
-app = 'bangui-finance'
+app = 'bangui-bank-backend'
 primary_region = 'ewr'
 
 [http_service]
