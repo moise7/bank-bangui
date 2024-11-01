@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
+// Define the API base URL
+const API_BASE_URL = process.env.VUE_APP_API_BASE_URL || 'http://localhost:3000';
+
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null,
@@ -10,7 +13,7 @@ export const useUserStore = defineStore('user', {
   actions: {
     async loginUser(credentials) {
       try {
-        const response = await axios.post('http://localhost:3000/api/v1/sign_in', {
+        const response = await axios.post(`${API_BASE_URL}/api/v1/sign_in`, {
           user: {
             username: credentials.username,
             password: credentials.password,
@@ -32,7 +35,7 @@ export const useUserStore = defineStore('user', {
       }
 
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/user_data', { // Adjust endpoint if necessary
+        const response = await axios.get(`${API_BASE_URL}/api/v1/user_data`, { // Adjust endpoint if necessary
           headers: { Authorization: `Bearer ${this.token}` },
         });
         this.user = response.data.user; // Make sure this matches your API response
