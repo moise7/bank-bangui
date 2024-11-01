@@ -1,3 +1,46 @@
+# # services:
+# #   db:
+# #     image: postgres
+# #     environment:
+# #       POSTGRES_USER: bigvision
+# #       POSTGRES_PASSWORD: bigvision75
+# #       POSTGRES_DB: bangui_development
+# #     volumes:
+# #       - db_data:/var/lib/postgresql/data
+
+# #   web:
+# #     build: ./bangui-bank-backend
+# #     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails db:migrate db:seed && bundle exec rails server -b 0.0.0.0"
+# #     volumes:
+# #       - ./bangui-bank-backend:/app
+# #     ports:
+# #       - "3000:3000"
+# #     depends_on:
+# #       - db
+# #     environment:
+# #       RAILS_ENV: development
+# #       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+# #       DATABASE_HOST: db
+
+# #   frontend:
+# #     build:
+# #       context: ./bangui-bank-frontend
+# #     container_name: vue_frontend
+# #     ports:
+# #       - "8080:80" # Expose port 80 of the container to port 8080 on the host
+# #     volumes:
+# #       - ./bangui-bank-frontend:/app # Mount the frontend source code for live updates
+# #     depends_on:
+# #       - web # Ensure the backend starts before frontend
+
+# # volumes:
+# #   db_data:
+
+# # networks:
+# #   default:
+# #     driver: bridge
+
+# version: "3.7"
 # services:
 #   db:
 #     image: postgres
@@ -17,10 +60,12 @@
 #       - "3000:3000"
 #     depends_on:
 #       - db
+#     env_file:
+#       - ./bangui-bank-backend/.env # Explicitly reference your .env file
 #     environment:
 #       RAILS_ENV: development
-#       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
 #       DATABASE_HOST: db
+#       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
 
 #   frontend:
 #     build:
@@ -61,11 +106,10 @@ services:
     depends_on:
       - db
     env_file:
-      - ./bangui-bank-backend/.env # Explicitly reference your .env file
+      - ./bangui-bank-backend/.env # Loads environment variables from .env file
     environment:
       RAILS_ENV: development
       DATABASE_HOST: db
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
 
   frontend:
     build:
@@ -84,3 +128,4 @@ volumes:
 networks:
   default:
     driver: bridge
+
