@@ -59,8 +59,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_28_035408) do
   end
 
   create_table "transactions", force: :cascade do |t|
+    t.decimal "amount", precision: 10, scale: 2
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -90,4 +93,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_28_035408) do
   add_foreign_key "bank_transactions", "users", column: "receiver_id"
   add_foreign_key "bank_transactions", "users", column: "sender_id"
   add_foreign_key "payments", "users"
+  add_foreign_key "transactions", "users"
 end
