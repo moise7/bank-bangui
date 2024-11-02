@@ -8,8 +8,8 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins 'http://localhost:8080',
-            'https://bangui-bank-frontend.fly.dev/',
-            'http://142.93.6.64/',
+            'https://bangui-bank-frontend.fly.dev',
+            'http://142.93.6.64',
             'http://142.93.6.64:3000'
 
     resource '*',
