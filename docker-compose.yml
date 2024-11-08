@@ -105,13 +105,15 @@ services:
       - "3000:3000"
     depends_on:
       - db
-    env_file:
-      - ./bangui-bank-backend/.env # Loads environment variables from .env file
+    # env_file:
+    #   - ./bangui-bank-backend/.env # Loads environment variables from .env file
     environment:
       RAILS_ENV: development
       DATABASE_HOST: db
 
   frontend:
+    env_file:
+      - ./bangui-bank-backend/.env
     build:
       context: ./bangui-bank-frontend
     container_name: vue_frontend
