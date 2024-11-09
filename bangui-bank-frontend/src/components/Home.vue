@@ -38,6 +38,7 @@
             Notre fintech vous propose des solutions innovantes pour gérer vos finances en toute simplicité.
             Avec des frais réduits, des transferts rapides, et une carte de débit intuitive, nous facilitons l'accès aux services bancaires pour tous.
           </p>
+          <p>MOise test</p>
           <div class="flex space-x-4">
             <button class="bg-goldColor text-black rounded py-2 px-4 hover:bg-goldColor-light">Découvrir nos services</button>
             <button class="bg-transparent border border-goldColor text-white rounded py-2 px-4 hover:bg-goldColor hover:text-black">Découvrir nos services</button>
