@@ -37,6 +37,7 @@
           <p class="mb-4 text-lg font-mona text-white">
             Notre fintech vous propose des solutions innovantes pour gérer vos finances en toute simplicité.
             Avec des frais réduits, des transferts rapides, et une carte de débit intuitive, nous facilitons l'accès aux services bancaires pour tous.
+            Test moise
           </p>
           <p>MOise test</p>
           <div class="flex space-x-4">
@@ -52,7 +53,7 @@
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-8 mx-auto max-w-screen-xl">
         <div class="flex flex-col justify-center items-start">
-          <h3 class="text-2xl font-bold leading-normal mb-4 text-goldColor font-mona">1. Transfert RapideVotre</h3>
+          <h3 class="text-2xl font-bold leading-normal mb-4 text-goldColor font-mona">1. Transfert Rapide</h3>
           <p class="mb-4 text-lg font-mona text-white">
             Profitez d'un transfert instantané, sécurisé et sans tracas pour vos besoins financiers. Rapidité et efficacité garanties.
           </p>
