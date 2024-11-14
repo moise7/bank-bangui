@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for bangui-bank-backend on 2024-10-17T19:50:31-04:00
+# fly.toml app configuration file generated for bangui-bank-backend on 2024-11-14T16:04:12-05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "bangui-bank-backend"
-primary_region = 'ewr'
+app = 'bangui-bank-backend'
+primary_region = 'ord'
 console_command = '/rails/bin/rails console'
 
 [build]
