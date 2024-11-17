@@ -250,6 +250,31 @@ export default {
           ]
         },
         {
+          category: 'Centre d\'Apprentissage', // New educational section
+          items: [
+            {
+              label: 'Avantages Bancaires',
+              icon: 'fas fa-piggy-bank',
+              route: '/education/account-benefits'
+            },
+            {
+              label: 'Éducation Financière',
+              icon: 'fas fa-graduation-cap',
+              route: '/education/financial-literacy'
+            },
+            {
+              label: 'Sécurité Bancaire',
+              icon: 'fas fa-shield-alt',
+              route: '/education/security'
+            },
+            {
+              label: 'Services Numériques',
+              icon: 'fas fa-mobile-alt',
+              route: '/education/digital-banking'
+            }
+          ]
+        },
+        {
           category: 'Autres',
           items: [
             { label: 'Services supplémentaires', icon: 'fas fa-plus-circle' },
@@ -277,6 +302,8 @@ export default {
         router.push('/');
       } else if (item === 'Envoyer de l\'argent') {
         router.push('/payment-form');
+      } else if (item.route) {  // Check if the item has a route
+        router.push(item.route);
       }
     }
 
@@ -355,6 +382,8 @@ export default {
         this.handleLogout();
       } else if (item === 'Envoyer de l\'argent') {
         this.$router.push('/payment-form');
+      } else if (item.route) {
+        this.$router.push(item.route);
       }
     },
     handleLogout() {

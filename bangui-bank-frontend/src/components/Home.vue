@@ -74,12 +74,34 @@
       </p>
       <!-- Responsive buttons -->
       <div class="flex flex-col sm:flex-row gap-3 sm:space-x-4 w-full sm:w-auto">
-        <button class="w-full sm:w-auto bg-goldColor text-black rounded py-2 px-4 hover:bg-goldColor-light transition duration-300">
+        <router-link
+          to="/education/digital-banking"
+          class="w-full sm:w-auto bg-goldColor text-black rounded py-2 px-4 hover:bg-goldColor-light transition duration-300 text-center"
+        >
           Découvrir nos services
-        </button>
-        <button class="w-full sm:w-auto bg-transparent border border-goldColor text-white rounded py-2 px-4 hover:bg-goldColor hover:text-black transition duration-300">
-          Découvrir nos services
-        </button>
+        </router-link>
+
+        <!-- Dropdown button for all services -->
+        <div class="relative">
+          <button
+            @click="toggleServicesDropdown"
+            class="w-full sm:w-auto bg-transparent border border-goldColor text-white rounded py-2 px-4 hover:bg-goldColor hover:text-black transition duration-300"
+          >
+            Tous nos services
+          </button>
+          <div v-if="isServicesDropdownOpen"
+               class="absolute z-50 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+            <router-link
+              v-for="service in educationalServices"
+              :key="service.path"
+              :to="service.path"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-goldColor hover:text-white"
+              @click="isServicesDropdownOpen = false"
+            >
+              {{ service.title }}
+            </router-link>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -126,7 +148,12 @@
             Un compte bancaire vous donne accès à des services essentiels comme les paiements, l'épargne, et la gestion de vos finances.
             C'est un élément crucial pour assurer votre sécurité financière et profiter d'une meilleure gestion de votre argent au quotidien.
           </p>
-          <button class="bg-goldColor text-black rounded py-2 px-4 hover:bg-goldColor-light">En savoir plus</button>
+          <router-link
+            to="/education/account-benefits"
+            class="bg-goldColor text-black rounded py-2 px-4 hover:bg-goldColor-light transition duration-300 text-center"
+          >
+            En savoir plus
+          </router-link>
         </div>
       </div>
     </div>
@@ -140,7 +167,12 @@
             Notre fintech vous propose des solutions innovantes pour gérer vos finances en toute simplicité.
             Avec des frais réduits, des transferts rapides, et une carte de débit intuitive, nous facilitons l'accès aux services bancaires pour tous.
           </p>
-          <button class="bg-goldColor text-black rounded py-2 px-4 hover:bg-goldColor-light">Découvrir nos services</button>
+          <router-link
+            to="/education/financial-literacy"
+            class="bg-goldColor text-black rounded py-2 px-4 hover:bg-goldColor-light transition duration-300 text-center"
+          >
+            Découvrir nos services
+          </router-link>
         </div>
         <div class="flex justify-center items-center">
           <!-- Image placeholder -->
@@ -188,28 +220,68 @@ export default {
     const email = ref('')
     const router = useRouter()
     const isMenuOpen = ref(false)
+    const isServicesDropdownOpen = ref(false)
     const isMobile = ref(window.innerWidth < 640)
+
+    const educationalServices = [
+      {
+        path: '/education/account-benefits',
+        title: 'Avantages Bancaires'
+      },
+      {
+        path: '/education/financial-literacy',
+        title: 'Éducation Financière'
+      },
+      {
+        path: '/education/security',
+        title: 'Sécurité Bancaire'
+      },
+      {
+        path: '/education/digital-banking',
+        title: 'Services Numériques'
+      }
+    ]
+
+    const toggleServicesDropdown = () => {
+      isServicesDropdownOpen.value = !isServicesDropdownOpen.value
+    }
+
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.services-dropdown')) {
+        isServicesDropdownOpen.value = false
+      }
+    }
 
     const signUp = async () => {
       console.log("Sign up with email:", email.value)
     }
+
     const handleResize = () => {
       isMobile.value = window.innerWidth < 640
-      if (!isMobile.value) isMenuOpen.value = false
+      if (!isMobile.value) {
+        isMenuOpen.value = false
+        isServicesDropdownOpen.value = false
+      }
     }
 
     onMounted(() => {
       window.addEventListener('resize', handleResize)
+      document.addEventListener('click', handleClickOutside)
     })
 
     onUnmounted(() => {
       window.removeEventListener('resize', handleResize)
+      document.removeEventListener('click', handleClickOutside)
     })
+
     return {
       email,
       signUp,
       isMenuOpen,
-      isMobile
+      isMobile,
+      isServicesDropdownOpen,
+      educationalServices,
+      toggleServicesDropdown
     }
   }
 }
