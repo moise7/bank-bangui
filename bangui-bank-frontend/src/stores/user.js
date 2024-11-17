@@ -201,7 +201,8 @@ export const useUserStore = defineStore('user', {
       return {
         USD: state.exchangeRates.USD,
         XAF: state.exchangeRates.XAF,
-        EUR: 1
+        EUR: 1,
+        USD_TO_XAF: state.exchangeRates.XAF / state.exchangeRates.USD
       };
     }
   },

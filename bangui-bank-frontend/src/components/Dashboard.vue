@@ -143,12 +143,19 @@
           </span>
         </div>
 
-        <div v-if="userStore.currentExchangeRates" class="flex gap-4 text-sm">
+        <div v-if="userStore.currentExchangeRates" class="flex flex-col gap-2 text-sm">
+          <!-- Euro conversions -->
           <div class="flex items-center gap-2">
             <span class="text-gray-500">1 EUR =</span>
             <span class="font-medium">${{ userStore.currentExchangeRates.USD }} USD</span>
             <span class="mx-2">|</span>
             <span class="font-medium">{{ userStore.currentExchangeRates.XAF }} CFA</span>
+          </div>
+
+          <!-- Dollar conversions -->
+          <div class="flex items-center gap-2">
+            <span class="text-gray-500">1 USD =</span>
+            <span class="font-medium">{{ (userStore.currentExchangeRates.XAF / userStore.currentExchangeRates.USD).toFixed(2) }} CFA</span>
           </div>
 
           <div v-if="userStore.isLoadingRates" class="animate-spin text-goldColor">
