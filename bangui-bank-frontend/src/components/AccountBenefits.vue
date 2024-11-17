@@ -48,9 +48,15 @@
         <p class="mb-4">
           Ouvrez un compte aujourd'hui et prenez le contrôle de vos finances
         </p>
-        <button class="bg-white text-goldColor px-6 py-2 rounded-full font-bold hover:bg-gray-100 transition-colors duration-300">
-          Ouvrir un Compte
-        </button>
+        <router-link to="/signup" custom v-slot="{ navigate }">
+          <button
+            @click="navigate"
+            type="button"
+            class="py-2 px-3 text-sm font-medium rounded-lg border border-goldColor bg-goldColor text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-200"
+          >
+            Ouvrir un Compte
+          </button>
+        </router-link>
       </div>
     </div>
   </div>

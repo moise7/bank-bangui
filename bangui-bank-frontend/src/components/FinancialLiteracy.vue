@@ -95,6 +95,24 @@
           </div>
         </div>
       </div>
+
+      <div class="mt-8 bg-gradient-to-r from-goldColor to-yellow-600 rounded-lg p-6 text-white text-center">
+        <h3 class="text-xl md:text-2xl font-bold mb-3">
+          Prêt à commencer votre voyage financier ?
+        </h3>
+        <p class="mb-4">
+          Ouvrez un compte aujourd'hui et prenez le contrôle de vos finances
+        </p>
+        <router-link to="/signup" custom v-slot="{ navigate }">
+          <button
+            @click="navigate"
+            type="button"
+            class="py-2 px-3 text-sm font-medium rounded-lg border border-goldColor bg-goldColor text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-200"
+          >
+            Ouvrir un Compte
+          </button>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -181,4 +199,4 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-</style> 
+</style>
