@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import axiosInstance from '@/utils/axios';
 
 // Define API base URL here, use environment variable or default to localhost
 const API_BASE_URL = process.env.VUE_APP_API_BASE_URL || 'http://localhost:3000';
@@ -21,7 +21,7 @@ export const useUserStore = defineStore('user', {
   actions: {
     async loginUser(credentials) {
       try {
-        const response = await axios.post(`${API_BASE_URL}/api/v1/sign_in`, {
+        const response = await axiosInstance.post(`${API_BASE_URL}/api/v1/sign_in`, {
           user: {
             username: credentials.username,
             password: credentials.password,
@@ -36,10 +36,10 @@ export const useUserStore = defineStore('user', {
         console.error('Login failed:', error.response ? error.response.data : error.message);
       }
     },
-    
+
     async signUpUser(userData) {
       try {
-        const response = await axios.post(`${API_BASE_URL}/api/v1/sign_up`, userData);
+        const response = await axiosInstance.post(`${API_BASE_URL}/api/v1/sign_up`, userData);
         this.user = response.data.user;
         this.token = response.data.token;
         this.userId = response.data.user.id; // Store user ID
@@ -57,7 +57,7 @@ export const useUserStore = defineStore('user', {
       }
 
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/v1/user_data`, {
+        const response = await axiosInstance.get(`${API_BASE_URL}/api/v1/user_data`, {
           headers: { Authorization: `Bearer ${this.token}` },
         });
         this.user = response.data.user; // Adjust this based on your API response structure
@@ -73,7 +73,7 @@ export const useUserStore = defineStore('user', {
 
     async fetchTowns() {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/v1/locations/towns`);
+        const response = await axiosInstance.get(`${API_BASE_URL}/api/v1/locations/towns`);
         this.towns = response.data.towns; // Store fetched towns in state
       } catch (error) {
         console.error('Error fetching towns:', error);
@@ -88,7 +88,7 @@ export const useUserStore = defineStore('user', {
       }
 
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/v1/payments`, {
+        const response = await axiosInstance.get(`${API_BASE_URL}/api/v1/payments`, {
           headers: { Authorization: `Bearer ${this.token}` },
         });
         this.payments = response.data.payments; // Store fetched payments in state
@@ -113,7 +113,7 @@ export const useUserStore = defineStore('user', {
 
       this.isLoadingRates = true;
       try {
-        const response = await axios.get(
+        const response = await axiosInstance.get(
           `https://v6.exchangerate-api.com/v6/${EXCHANGE_RATE_API_KEY}/latest/${this.baseCurrency}`
         );
 
@@ -150,7 +150,7 @@ export const useUserStore = defineStore('user', {
       }
 
       try {
-        const response = await axios.post(
+        const response = await axiosInstance.post(
           `${API_BASE_URL}/api/v1/payments`,
           { payment: paymentData },
           {
@@ -165,6 +165,19 @@ export const useUserStore = defineStore('user', {
       } catch (error) {
         console.error('Payment failed:', error.response ? error.response.data : error.message);
         throw error;
+      }
+    },
+
+    async verifyToken() {
+      if (!this.token) return false;
+
+      try {
+        const response = await axiosInstance.get('/api/v1/verify_token', {
+          headers: { Authorization: `Bearer ${this.token}` }
+        });
+        return response.status === 200;
+      } catch (error) {
+        return false;
       }
     },
   },

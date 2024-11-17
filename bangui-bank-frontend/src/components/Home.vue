@@ -20,11 +20,19 @@
             </router-link>
           </div>
 
-          <!-- Mobile Menu Button -->
-          <div class="sm:hidden">
+          <!-- Mobile Menu Button Area -->
+          <div class="sm:hidden flex items-center gap-2">
+            <!-- Sign Up Button for Mobile -->
+            <router-link to="/signup" custom v-slot="{ navigate }">
+              <button @click="navigate" type="button" class="py-2 px-3 text-sm font-medium rounded-lg border border-goldColor bg-goldColor text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-200">
+                S'incrire
+              </button>
+            </router-link>
+
+            <!-- Menu Button -->
             <button type="button"
               @click="isMenuOpen = !isMenuOpen"
-              class="relative size-7 flex justify-center items-center gap-2 rounded-lg border border-gray-700 font-medium bg-gray-800 text-gray-400 shadow-sm align-middle hover:bg-gray-700/20 focus:outline-none focus:bg-gray-700/20 text-sm">
+              class="relative size-8 flex justify-center items-center rounded-lg border border-white text-white hover:bg-white hover:text-black transition duration-200">
               <svg class="shrink-0 size-4" :class="{ 'hidden': isMenuOpen }" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
               <svg class="shrink-0 size-4" :class="{ 'hidden': !isMenuOpen }" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
@@ -47,15 +55,6 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
               </svg>
               <span class="font-medium">Se connecter</span>
-            </router-link>
-            <router-link
-              @click="isMenuOpen = false"
-              to="/signup"
-              class="text-white px-6 py-4 hover:bg-white/10 transition-all duration-200 flex items-center space-x-3">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-              </svg>
-              <span class="font-medium">S'incrire</span>
             </router-link>
           </div>
         </div>
