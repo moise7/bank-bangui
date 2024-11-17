@@ -37,41 +37,61 @@
   </div>
 
   <!-- Mobile Navigation -->
-  <div class="sm:hidden">
-    <div class="flex items-center justify-between px-4 py-3">
-      <div class="text-xl font-semibold flex items-center gap-2">
-        <i class="fas fa-bars"></i> Menu
+  <div class="block sm:hidden">
+    <!-- Mobile Header -->
+    <div class="bg-goldColor p-4 flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <span class="text-xl font-semibold text-black">Menu</span>
       </div>
       <div class="flex items-center gap-4">
         <button
           @click="handleLogout"
-          class="hover:text-white transition-colors duration-200"
+          class="text-black hover:text-white transition-colors duration-200"
+          title="Déconnexion"
         >
-          <i class="fas fa-sign-out-alt text-white text-xl"></i>
+          <i class="fas fa-sign-out-alt text-black text-xl"></i>
         </button>
-        <button @click="isMobileMenuOpen = !isMobileMenuOpen">
-          <i class="fas fa-chevron-down"></i>
+
+        <!-- Smaller Animated Hamburger Button -->
+        <button
+          @click="toggleMobileMenu"
+          class="group h-8 w-8 rounded-lg border-2 border-black"
+          aria-label="Toggle menu"
+        >
+          <div class="grid justify-items-center gap-1">
+            <span
+              class="h-0.5 w-4 rounded-full bg-black transition-all duration-300"
+              :class="{ 'rotate-45 translate-y-1.5': isMobileMenuOpen }"
+            ></span>
+            <span
+              class="h-0.5 w-4 rounded-full bg-black transition-all duration-300"
+              :class="{ 'opacity-0': isMobileMenuOpen }"
+            ></span>
+            <span
+              class="h-0.5 w-4 rounded-full bg-black transition-all duration-300"
+              :class="{ '-rotate-45 -translate-y-1.5': isMobileMenuOpen }"
+            ></span>
+          </div>
         </button>
       </div>
     </div>
 
-    <!-- Mobile Menu Dropdown -->
-    <div class="absolute w-full bg-white shadow-lg transition-all duration-300 ease-in-out"
-         :class="{ 'opacity-100 translate-y-0': isMobileMenuOpen,
-                  'opacity-0 -translate-y-full pointer-events-none': !isMobileMenuOpen }">
-      <div class="py-2">
-        <div v-for="(category, index) in navItems" :key="index">
-          <div class="px-4 py-2 text-sm font-semibold text-gray-500 bg-gray-50">
-            {{ category.category }}
-          </div>
-          <a v-for="item in category.items"
+    <!-- Mobile Menu -->
+    <div
+      v-if="isMobileMenuOpen"
+      class="bg-white border-b shadow-lg"
+    >
+      <div v-for="(category, index) in navItems" :key="index">
+        <div class="bg-gray-100 px-4 py-3 font-semibold text-black border-b">
+          {{ category.category }}
+        </div>
+        <div v-for="item in category.items"
              :key="item.label"
-             href="#"
              @click="handleMobileNavClick(item.label)"
-             class="flex items-center gap-3 px-6 py-3 hover:bg-gray-50 transition-colors duration-200 border-b border-gray-100">
-            <i :class="[item.icon, 'w-5 text-goldColor']"></i>
-            {{ item.label }}
-          </a>
+             class="px-4 py-4 border-b flex items-center gap-3 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200 cursor-pointer"
+        >
+          <i :class="[item.icon, 'text-goldColor w-6 text-center text-xl']"></i>
+          <span class="text-black">{{ item.label }}</span>
         </div>
       </div>
     </div>
@@ -83,45 +103,25 @@
     </div>
 
     <!-- Accounts Section -->
-    <div class="accounts-section bg-white p-6 mt-4 rounded-lg shadow-lg"
+    <div class="accounts-section bg-white p-6 mt-4 rounded-lg shadow-lg mx-4"
          v-if="userStore.user && userStore.user.username">
+      <!-- Account Header -->
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold">Compte Principal</h2>
 
-        <div class="flex items-center gap-4">
-          <!-- Currency Selector with Exchange Rate Info -->
-          <div class="relative group">
-            <select
-              v-model="userStore.selectedCurrency"
-              class="p-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-goldColor"
-              :disabled="userStore.isLoadingRates"
-            >
-              <option value="€">Euro (€)</option>
-              <option value="$">Dollar ($)</option>
-              <option value="CFA">CFA Franc (CFA)</option>
-            </select>
-
-            <!-- Exchange Rate Tooltip -->
-            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-3 hidden group-hover:block z-50">
-              <p class="text-sm text-gray-600">Taux de change actuels:</p>
-              <div v-if="userStore.currentExchangeRates" class="mt-1">
-                <p class="text-xs">1 EUR =</p>
-                <p class="text-xs">$ {{ userStore.currentExchangeRates.USD }} USD</p>
-                <p class="text-xs">{{ userStore.currentExchangeRates.XAF }} CFA</p>
-              </div>
-              <p class="text-xs text-gray-400 mt-2">
-                Dernière mise à jour: {{ userStore.lastRatesUpdate ? new Date(userStore.lastRatesUpdate).toLocaleTimeString() : 'Jamais' }}
-              </p>
-            </div>
-          </div>
-
-          <!-- Loading Indicator -->
-          <div v-if="userStore.isLoadingRates" class="animate-spin text-goldColor">
-            <i class="fas fa-sync-alt"></i>
-          </div>
-        </div>
+        <!-- Currency Selector -->
+        <select
+          v-model="userStore.selectedCurrency"
+          class="p-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-goldColor"
+          :disabled="userStore.isLoadingRates"
+        >
+          <option value="€">Euro (€)</option>
+          <option value="$">Dollar ($)</option>
+          <option value="CFA">CFA Franc (CFA)</option>
+        </select>
       </div>
 
+      <!-- Account Balance Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-gradient-to-r from-goldColor to-yellow-600 p-6 rounded-lg text-white">
           <p class="text-sm opacity-80">Solde disponible</p>
@@ -131,6 +131,29 @@
         <div class="bg-gray-50 p-6 rounded-lg">
           <p class="text-sm text-gray-600">Informations du compte</p>
           <p class="mt-1"><i class="far fa-calendar-alt mr-2"></i> Créé le: {{ new Date(userStore.user.created_at).toLocaleDateString('fr-FR') }}</p>
+        </div>
+      </div>
+
+      <!-- Exchange Rates Box -->
+      <div class="bg-gray-50 p-3 mt-4 rounded-lg border border-gray-200">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs text-gray-600">Taux de change actuels</span>
+          <span class="text-xs text-gray-400">
+            {{ userStore.lastRatesUpdate ? new Date(userStore.lastRatesUpdate).toLocaleTimeString() : 'Jamais' }}
+          </span>
+        </div>
+
+        <div v-if="userStore.currentExchangeRates" class="flex gap-4 text-sm">
+          <div class="flex items-center gap-2">
+            <span class="text-gray-500">1 EUR =</span>
+            <span class="font-medium">${{ userStore.currentExchangeRates.USD }} USD</span>
+            <span class="mx-2">|</span>
+            <span class="font-medium">{{ userStore.currentExchangeRates.XAF }} CFA</span>
+          </div>
+
+          <div v-if="userStore.isLoadingRates" class="animate-spin text-goldColor">
+            <i class="fas fa-sync-alt text-xs"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -319,29 +342,36 @@ export default {
       }
     },
     handleMobileNavClick(item) {
+      console.log('Clicked:', item);
       this.isMobileMenuOpen = false;
-    this.handleNavClick(item);
+      if (item === 'Déconnexion') {
+        this.handleLogout();
+      } else if (item === 'Envoyer de l\'argent') {
+        this.$router.push('/payment-form');
+      }
     },
     handleLogout() {
       this.userStore.logout();
-      this.router.push('/');
+      this.$router.push('/');
+    },
+    toggleMobileMenu() {
+      console.log('Toggling menu');
+      this.isMobileMenuOpen = !this.isMobileMenuOpen;
+      console.log('Menu is now:', this.isMobileMenuOpen);
     }
   },
 };
 </script>
 
 <style scoped>
-.translate-y-0 {
-  transform: translateY(0);
+.visible {
+  visibility: visible;
 }
 
-.-translate-y-full {
-  transform: translateY(-100%);
+.invisible {
+  visibility: hidden;
 }
 
-.pointer-events-none {
-  pointer-events: none;
-}
 .calendar-day {
   transition: background-color 0.3s;
 }
@@ -357,5 +387,30 @@ export default {
 
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+.menu-enter-active,
+.menu-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.menu-enter-from,
+.menu-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.transform {
+  transition: transform 0.3s;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+
+.inset-x-0 {
+  left: 0;
+  right: 0;
 }
 </style>
