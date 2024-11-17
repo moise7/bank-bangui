@@ -36,6 +36,7 @@ export const useUserStore = defineStore('user', {
         console.error('Login failed:', error.response ? error.response.data : error.message);
       }
     },
+    
     async signUpUser(userData) {
       try {
         const response = await axios.post(`${API_BASE_URL}/api/v1/sign_up`, userData);
@@ -48,6 +49,7 @@ export const useUserStore = defineStore('user', {
         console.error('Registration failed:', error.response ? error.response.data : error.message);
       }
     },
+
     async fetchUserData() {
       if (!this.token || !this.userId) {
         console.error('No token or user ID found, please login');
@@ -68,6 +70,7 @@ export const useUserStore = defineStore('user', {
         }
       }
     },
+
     async fetchTowns() {
       try {
         const response = await axios.get(`${API_BASE_URL}/api/v1/locations/towns`);
@@ -77,6 +80,7 @@ export const useUserStore = defineStore('user', {
         this.error = 'Failed to fetch towns. Please try again later.'; // Optionally set an error message
       }
     },
+
     async fetchPayments() {
       if (!this.token || !this.userId) {
         console.error('No token or user ID found, please login');
@@ -99,6 +103,7 @@ export const useUserStore = defineStore('user', {
       localStorage.removeItem('token');
       localStorage.removeItem('userId'); // Clear persisted user ID
     },
+
     async fetchExchangeRates() {
       // Check if rates were fetched in the last hour
       const oneHourAgo = new Date(Date.now() - 3600000);
@@ -136,6 +141,31 @@ export const useUserStore = defineStore('user', {
 
       const rate = rates[this.selectedCurrency] || 1;
       return (amount * rate).toFixed(2);
+    },
+
+    async createPayment(paymentData) {
+      if (!this.token) {
+        console.error('No token found, please login');
+        return;
+      }
+
+      try {
+        const response = await axios.post(
+          `${API_BASE_URL}/api/v1/payments`,
+          { payment: paymentData },
+          {
+            headers: { Authorization: `Bearer ${this.token}` }
+          }
+        );
+
+        // Optionally update payments list
+        await this.fetchPayments();
+
+        return response.data;
+      } catch (error) {
+        console.error('Payment failed:', error.response ? error.response.data : error.message);
+        throw error;
+      }
     },
   },
   getters: {

@@ -160,16 +160,10 @@ export default {
         successNotificationMessage.value = '';
         showSuccessNotification.value = false;
 
-        const response = await axios.post(`${API_BASE_URL}/api/v1/payments`, {
-          payment: {
-            receiver_email: receiverEmail.value,
-            amount: Number(amount.value),
-            description: description.value
-          }
-        }, {
-          headers: {
-            Authorization: `Bearer ${userStore.token}`
-          }
+        await userStore.createPayment({
+          receiver_email: receiverEmail.value,
+          amount: Number(amount.value),
+          description: description.value
         });
 
         successNotificationMessage.value = 'Paiement complété, redirection vers le tableau de bord...';
