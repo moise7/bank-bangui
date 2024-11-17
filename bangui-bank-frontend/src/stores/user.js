@@ -64,7 +64,7 @@ export const useUserStore = defineStore('user', {
     },
     async fetchTowns() {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/v1/locations/towns`); // Adjust API endpoint if necessary
+        const response = await axios.get(`${API_BASE_URL}/api/v1/locations/towns`);
         this.towns = response.data.towns; // Store fetched towns in state
       } catch (error) {
         console.error('Error fetching towns:', error);

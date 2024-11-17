@@ -1,71 +1,119 @@
 <template>
   <div>
-    <header class="bg-gradient-to-r from-black to-goldColor flex flex-wrap sm:justify-start sm:flex-nowrap w-full -mb-10 shadow -mt-6">
-      <nav class="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
+    <header class="bg-gradient-to-r from-black to-goldColor w-full shadow relative z-50">
+      <nav class="max-w-[85rem] w-full mx-auto px-4 py-0 sm:py-4">
         <div class="flex items-center justify-between">
+          <!-- Logo -->
           <a class="flex-none focus:outline-none focus:opacity-80" href="#">
             <img src="../assets/images/meya-logo.png" alt="Meya Logo" class="h-44 w-auto block p-0 mt-0 align-middle">
           </a>
-          <div class="sm:hidden">
-            <button type="button" class="hs-collapse-toggle relative size-7 flex justify-center items-center gap-2 rounded-lg border border-gray-700 font-medium bg-gray-800 text-gray-400 shadow-sm align-middle hover:bg-gray-700/20 focus:outline-none focus:bg-gray-700/20 text-sm" id="hs-navbar-dark-collapse" aria-expanded="false" aria-controls="hs-navbar-dark" aria-label="Toggle navigation" data-hs-collapse="#hs-navbar-dark">
-              <svg class="hs-collapse-open:hidden shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
-              <svg class="hs-collapse-open:block hidden shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            </button>
-          </div>
-        </div>
 
-        <div id="hs-navbar-dark" class="hidden hs-collapse overflow-hidden transition-all duration-300 basis-full grow sm:block">
-          <div class="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:justify-end sm:mt-0 sm:ps-5">
-            <!-- "Se connecter" Link with Outline -->
+          <!-- Desktop Navigation -->
+          <div class="hidden sm:flex items-center gap-4">
             <router-link to="/login" class="font-medium text-white focus:outline-none border border-white py-2 px-4 rounded-lg hover:bg-white hover:text-black transition duration-200" aria-current="page">
               Se connecter
             </router-link>
-            <!-- "S'inscrire" Button, now larger -->
             <router-link to="/signup" custom v-slot="{ navigate }">
               <button @click="navigate" type="button" class="py-3 px-5 inline-flex items-center gap-x-2 text-base font-medium rounded-lg border border-goldColor bg-goldColor text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-200">
                 S'incrire
               </button>
             </router-link>
           </div>
+
+          <!-- Mobile Menu Button -->
+          <div class="sm:hidden">
+            <button type="button"
+              @click="isMenuOpen = !isMenuOpen"
+              class="relative size-7 flex justify-center items-center gap-2 rounded-lg border border-gray-700 font-medium bg-gray-800 text-gray-400 shadow-sm align-middle hover:bg-gray-700/20 focus:outline-none focus:bg-gray-700/20 text-sm">
+              <svg class="shrink-0 size-4" :class="{ 'hidden': isMenuOpen }" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
+              <svg class="shrink-0 size-4" :class="{ 'hidden': !isMenuOpen }" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div
+          class="sm:hidden fixed top-[120px] left-0 right-0 bg-gradient-to-r from-black/95 to-goldColor/95 backdrop-blur-sm transition-all duration-300 ease-in-out z-50 border-t border-goldColor/20 shadow-lg"
+          :class="{
+            'opacity-100 translate-y-0': isMenuOpen,
+            'opacity-0 -translate-y-full pointer-events-none': !isMenuOpen
+          }">
+          <div class="flex flex-col divide-y divide-goldColor/10 max-w-[85rem] mx-auto">
+            <router-link
+              @click="isMenuOpen = false"
+              to="/login"
+              class="text-white px-6 py-4 hover:bg-white/10 transition-all duration-200 flex items-center space-x-3">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
+              <span class="font-medium">Se connecter</span>
+            </router-link>
+            <router-link
+              @click="isMenuOpen = false"
+              to="/signup"
+              class="text-white px-6 py-4 hover:bg-white/10 transition-all duration-200 flex items-center space-x-3">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+              </svg>
+              <span class="font-medium">S'incrire</span>
+            </router-link>
+          </div>
         </div>
       </nav>
     </header>
-    <div class="bg-gradient-to-r from-black to-goldColor py-16 animate__animated animate__fadeInRight -mt-24">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-8 mx-auto max-w-screen-xl">
-        <div class="flex flex-col justify-center items-start -mt-10">
-          <h1 class="text-5xl font-bold leading-normal mb-4 text-white font-mona">Votre partenaire financier tout-en-un</h1>
-          <p class="mb-4 text-lg font-mona text-white">
-            Notre fintech vous propose des solutions innovantes pour gérer vos finances en toute simplicité.
-            Avec des frais réduits, des transferts rapides, et une carte de débit intuitive, nous facilitons l'accès aux services bancaires pour tous.
-            Test moise
-          </p>
-          <p>MOise test</p>
-          <div class="flex space-x-4">
-            <button class="bg-goldColor text-black rounded py-2 px-4 hover:bg-goldColor-light">Découvrir nos services</button>
-            <button class="bg-transparent border border-goldColor text-white rounded py-2 px-4 hover:bg-goldColor hover:text-black">Découvrir nos services</button>
-          </div>
-
-        </div>
-        <div class="flex justify-center items-center -mt-6 ml-12">
-          <img src="../assets/images/glass-credit.png" alt="Fintech Solutions" class="max-w-3xl animate-zoomInOut">
-        </div>
-
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-8 mx-auto max-w-screen-xl">
-        <div class="flex flex-col justify-center items-start">
-          <h3 class="text-2xl font-bold leading-normal mb-4 text-goldColor font-mona">1. Transfert Rapide</h3>
-          <p class="mb-4 text-lg font-mona text-white">
-            Profitez d'un transfert instantané, sécurisé et sans tracas pour vos besoins financiers. Rapidité et efficacité garanties.
-          </p>
-        </div>
-        <div class="flex flex-col justify-center items-start">
-          <h3 class="text-2xl font-bold leading-normal mb-4 text-goldColor font-mona">2.Système Facile à Utiliser</h3>
-          <p class="mb-4 text-lg font-mona text-white">
-            Interface intuitive pour des opérations rapides et sans effort. Simplifiez vos tâches quotidiennes facilement."
-          </p>
-        </div>
+  <div class="bg-gradient-to-r from-black to-goldColor py-8 sm:py-16 animate__animated animate__fadeInRight">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 items-center px-4 sm:px-8 mx-auto max-w-screen-xl">
+    <div class="flex flex-col justify-center items-start -mt-6">
+      <!-- Responsive heading -->
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight sm:leading-normal mb-3 sm:mb-4 text-white font-mona">
+        Votre partenaire financier tout-en-un
+      </h1>
+      <!-- Responsive paragraph -->
+      <p class="mb-4 text-base sm:text-lg font-mona text-white leading-relaxed">
+        Notre fintech vous propose des solutions innovantes pour gérer vos finances en toute simplicité.
+        Avec des frais réduits, des transferts rapides, et une carte de débit intuitive, nous facilitons l'accès aux services bancaires pour tous.
+      </p>
+      <!-- Responsive buttons -->
+      <div class="flex flex-col sm:flex-row gap-3 sm:space-x-4 w-full sm:w-auto">
+        <button class="w-full sm:w-auto bg-goldColor text-black rounded py-2 px-4 hover:bg-goldColor-light transition duration-300">
+          Découvrir nos services
+        </button>
+        <button class="w-full sm:w-auto bg-transparent border border-goldColor text-white rounded py-2 px-4 hover:bg-goldColor hover:text-black transition duration-300">
+          Découvrir nos services
+        </button>
       </div>
     </div>
+
+    <!-- Responsive image container -->
+    <div class="flex justify-center items-center mt-8 sm:-mt-6 ml-0 sm:ml-12">
+      <img
+        src="../assets/images/glass-credit.png"
+        alt="Fintech Solutions"
+        class="max-w-full sm:max-w-3xl animate-zoomInOut"
+      >
+    </div>
+  </div>
+
+  <!-- Features section -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-center px-4 sm:px-8 mx-auto max-w-screen-xl mt-8 sm:mt-16">
+    <div class="flex flex-col justify-center items-start">
+      <h3 class="text-xl sm:text-2xl font-bold leading-tight sm:leading-normal mb-3 sm:mb-4 text-goldColor font-mona">
+        1. Transfert Rapide
+      </h3>
+      <p class="mb-4 text-base sm:text-lg font-mona text-white leading-relaxed">
+        Profitez d'un transfert instantané, sécurisé et sans tracas pour vos besoins financiers. Rapidité et efficacité garanties.
+      </p>
+    </div>
+    <div class="flex flex-col justify-center items-start">
+      <h3 class="text-xl sm:text-2xl font-bold leading-tight sm:leading-normal mb-3 sm:mb-4 text-goldColor font-mona">
+        2. Système Facile à Utiliser
+      </h3>
+      <p class="mb-4 text-base sm:text-lg font-mona text-white leading-relaxed">
+        Interface intuitive pour des opérations rapides et sans effort. Simplifiez vos tâches quotidiennes facilement.
+      </p>
+    </div>
+  </div>
+</div>
     <!-- Section 1: Importance of Bank Account -->
     <div class="bg-white py-16 animate__animated animate__fadeInLeft">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-8 mx-auto max-w-screen-xl">
@@ -128,14 +176,11 @@
         <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="https://flowbite.com/" class="hover:underline">Meya™</a>. All Rights Reserved.</span>
       </div>
     </footer>
-
-
-
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default {
@@ -143,14 +188,29 @@ export default {
   setup() {
     const email = ref('')
     const router = useRouter()
+    const isMenuOpen = ref(false)
+    const isMobile = ref(window.innerWidth < 640)
 
     const signUp = async () => {
       console.log("Sign up with email:", email.value)
     }
+    const handleResize = () => {
+      isMobile.value = window.innerWidth < 640
+      if (!isMobile.value) isMenuOpen.value = false
+    }
 
+    onMounted(() => {
+      window.addEventListener('resize', handleResize)
+    })
+
+    onUnmounted(() => {
+      window.removeEventListener('resize', handleResize)
+    })
     return {
       email,
-      signUp
+      signUp,
+      isMenuOpen,
+      isMobile
     }
   }
 }
@@ -160,5 +220,23 @@ export default {
 /* Custom styles for background and animation */
 .bg-background2 {
   background-color: #f7f7f7;
+}
+.max-h-0 {
+  max-height: 0;
+}
+
+.max-h-96 {
+  max-height: 24rem;
+}
+/* .translate-y-0 {
+  transform: translateY(0);
+}
+
+.-translate-y-full {
+  transform: translateY(-100%);
+} */
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 </style>

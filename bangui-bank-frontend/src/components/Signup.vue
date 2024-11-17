@@ -27,12 +27,21 @@
       />
 
       <!-- Date of Birth -->
-      <input
-        class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-        type="date"
-        v-model="dateOfBirth"
-        placeholder="Date de Naissance"
-      />
+      <div class="relative w-full mb-4">
+        <div class="relative">
+          <input
+            class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+            type="date"
+            v-model="dateOfBirth"
+            :min="minDate"
+            :max="maxDate"
+            :placeholder="'JJ/MM/AAAA'"
+          />
+          <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+            <i class="fas fa-calendar"></i>
+          </div>
+        </div>
+      </div>
 
       <!-- Country Dropdown -->
       <select
@@ -44,18 +53,29 @@
         <option value="Autre Pays">Autre Pays</option>
       </select>
 
-      <!-- Town Dropdown (if Central African Republic is selected) -->
-      <div v-if="country === 'République Centrafricaine'">
-        <select
-          class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          v-model="town"
-        >
-          <option disabled value="">Sélectionnez une Ville</option>
-          <option v-for="townItem in towns" :key="townItem" :value="townItem">
-            {{ townItem }}
-          </option>
-        </select>
-      </div>
+      <!-- Town Dropdown -->
+      <div v-if="country === 'République Centrafricaine'" class="relative">
+  <select
+    class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    v-model="town"
+    :disabled="isLoadingTowns"
+  >
+    <option disabled value="">
+      {{ isLoadingTowns ? 'Chargement des villes...' : 'Sélectionnez une Ville' }}
+    </option>
+    <option v-for="townItem in towns" :key="townItem" :value="townItem">
+      {{ townItem }}
+    </option>
+  </select>
+
+  <!-- Loading indicator -->
+  <div v-if="isLoadingTowns" class="absolute right-3 top-1/2 -translate-y-1/2">
+    <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+  </div>
+</div>
 
       <!-- Phone Number -->
       <input
@@ -125,15 +145,17 @@
 </template>
 
 <script>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 
 export default {
   name: "SignUp",
   setup() {
     const userStore = useUserStore();
     const router = useRouter();
+    const { towns } = storeToRefs(userStore);
 
     const firstName = ref("");
     const middleName = ref("");
@@ -147,22 +169,52 @@ export default {
     const password = ref("");
     const passwordConfirmation = ref("");
     const signUpError = ref(null);
+    const isLoadingTowns = ref(false);
 
-    // Fetch towns from the store
+    // Optimized towns fetching function
+    const fetchTowns = async () => {
+      if (isLoadingTowns.value || towns.value.length > 0) return; // Prevent duplicate fetches
+
+      isLoadingTowns.value = true;
+      try {
+        await userStore.fetchTowns();
+      } catch (error) {
+        console.error("Failed to fetch towns:", error);
+      } finally {
+        isLoadingTowns.value = false;
+      }
+    };
+
+    // Computed property for towns visibility
+    const showTowns = computed(() => {
+      return country.value === 'République Centrafricaine' && towns.value.length > 0;
+    });
+
+    // Preload towns on mount
     onMounted(() => {
-      if (!userStore.towns.length) {
-        userStore.fetchTowns();
+      if (!towns.value.length) {
+        fetchTowns();
       }
     });
 
+    // Optimized watch for country changes
     watch(country, (newCountry) => {
-      if (newCountry !== 'République Centrafricaine') {
+      if (newCountry === 'République Centrafricaine') {
+        fetchTowns();
+      } else {
         town.value = "";
       }
     });
 
     const onSignUp = async (event) => {
       event.preventDefault();
+
+      // Validate required fields
+      if (!firstName.value || !lastName.value || !dateOfBirth.value || !email.value || !password.value) {
+        signUpError.value = "Veuillez remplir tous les champs obligatoires.";
+        return;
+      }
+
       const data = {
         user: {
           first_name: firstName.value,
@@ -181,17 +233,13 @@ export default {
 
       try {
         await userStore.signUpUser(data);
-        if (userStore.isAuthenticated) {
-          if (userStore.user && userStore.user.id) {
-            router.push(`/dashboard/${userStore.user.id}`);
-          } else {
-            signUpError.value = "Les données utilisateur ne sont pas disponibles.";
-          }
+        if (userStore.isAuthenticated && userStore.user?.id) {
+          router.push(`/dashboard/${userStore.user.id}`);
         } else {
-          signUpError.value = "L'inscription a échoué. Veuillez réessayer.";
+          signUpError.value = "Les données utilisateur ne sont pas disponibles.";
         }
       } catch (error) {
-        console.error('Erreur d\'inscription:', error.response ? error.response.data : error.message);
+        console.error('Erreur d\'inscription:', error.response?.data || error.message);
         signUpError.value = "Une erreur est survenue lors de l'inscription. Veuillez réessayer.";
       }
     };
@@ -202,7 +250,7 @@ export default {
       lastName,
       dateOfBirth,
       town,
-      towns: userStore.towns,
+      towns,
       country,
       phoneNumber,
       username,
@@ -211,6 +259,8 @@ export default {
       passwordConfirmation,
       signUpError,
       onSignUp,
+      isLoadingTowns,
+      showTowns
     };
   },
 };

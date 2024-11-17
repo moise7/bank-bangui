@@ -1,28 +1,96 @@
 <template>
   <div class="dashboard font-mona bg-background1">
-    <nav class="top-nav bg-goldColor text-black p-4">
-      <a href="#"
-         v-for="item in navItems"
-         :key="item"
-         @click="handleNavClick(item)"
-         class="mr-4 hover:text-secondary transition">
-        {{ item }}
-      </a>
-    </nav>
+    <nav class="bg-goldColor text-black shadow-md relative z-50">
+  <!-- Desktop Navigation -->
+  <div class="hidden sm:flex justify-between items-center max-w-7xl mx-auto px-4 py-3">
+    <div class="flex flex-wrap gap-6">
+      <div v-for="(category, index) in navItems" :key="index" class="relative group">
+        <button class="flex items-center gap-2 hover:text-white transition-colors duration-200 font-medium">
+          {{ category.category }}
+          <i class="fas fa-chevron-down text-xs transition-transform group-hover:rotate-180"></i>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div class="absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform -translate-y-2 group-hover:translate-y-0">
+          <div class="py-2">
+            <a v-for="item in category.items"
+               :key="item.label"
+               href="#"
+               @click="handleNavClick(item.label)"
+               class="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition-colors duration-200">
+              <i :class="[item.icon, 'w-5 text-goldColor']"></i>
+              {{ item.label }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <div class="sm:hidden">
+    <div class="flex items-center justify-between px-4 py-3">
+      <div class="text-xl font-semibold flex items-center gap-2">
+        <i class="fas fa-bars"></i> Menu
+      </div>
+      <button @click="isMobileMenuOpen = !isMobileMenuOpen"
+              class="text-black focus:outline-none">
+        <i class="fas fa-chevron-down transition-transform duration-200"
+           :class="{ 'transform rotate-180': isMobileMenuOpen }"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Menu Dropdown -->
+    <div class="absolute w-full bg-white shadow-lg transition-all duration-300 ease-in-out"
+         :class="{ 'opacity-100 translate-y-0': isMobileMenuOpen,
+                  'opacity-0 -translate-y-full pointer-events-none': !isMobileMenuOpen }">
+      <div class="py-2">
+        <div v-for="(category, index) in navItems" :key="index">
+          <div class="px-4 py-2 text-sm font-semibold text-gray-500 bg-gray-50">
+            {{ category.category }}
+          </div>
+          <a v-for="item in category.items"
+             :key="item.label"
+             href="#"
+             @click="handleMobileNavClick(item.label)"
+             class="flex items-center gap-3 px-6 py-3 hover:bg-gray-50 transition-colors duration-200 border-b border-gray-100">
+            <i :class="[item.icon, 'w-5 text-goldColor']"></i>
+            {{ item.label }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
 
     <div class="title text-3xl text-center mt-6" v-if="userStore.user && userStore.user.username">
       <h1><strong>Bienvenue,</strong> {{ userStore.user.first_name }}</h1>
     </div>
 
     <!-- Accounts Section -->
-    <div class="accounts-section bg-gray-100 p-4 mt-4 rounded-md shadow-md" v-if="userStore.user && userStore.user.username">
-      <p class="text-lg"><strong>Solde disponible:</strong> {{ formattedBalance }} </p>
-      <p class="text-sm"><strong>Créé le:</strong> {{ new Date(userStore.user.created_at).toLocaleDateString('fr-FR') }}</p>
-      <select v-model="selectedCurrency" class="mt-2 p-2 border border-gray-300 rounded">
-        <option value="€">Euro (€)</option>
-        <option value="$">Dollar ($)</option>
-        <option value="CFA">Central African CFA Franc (CFA)</option>
-      </select>
+    <div class="accounts-section bg-white p-6 mt-4 rounded-lg shadow-lg"
+         v-if="userStore.user && userStore.user.username">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold">Compte Principal</h2>
+        <select v-model="selectedCurrency"
+                class="p-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-goldColor focus:border-transparent">
+          <option value="€">Euro (€)</option>
+          <option value="$">Dollar ($)</option>
+          <option value="CFA">CFA Franc (CFA)</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-gradient-to-r from-goldColor to-yellow-600 p-6 rounded-lg text-white">
+          <p class="text-sm opacity-80">Solde disponible</p>
+          <p class="text-3xl font-bold mt-1">{{ formattedBalance }}</p>
+        </div>
+
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <p class="text-sm text-gray-600">Informations du compte</p>
+          <p class="mt-1"><i class="far fa-calendar-alt mr-2"></i> Créé le: {{ new Date(userStore.user.created_at).toLocaleDateString('fr-FR') }}</p>
+        </div>
+      </div>
     </div>
 
     <div class="dashboard-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
@@ -93,11 +161,35 @@ export default {
   name: 'BankingDashboard',
   data() {
     return {
-      navItems: ['Comptes', 'Transférer de l\'argent', 'Outils financiers', 'Contrôle de carte', 'Envoyer de l\'argent', 'Services supplémentaires', 'Déconnexion'],
+      navItems: [
+        {
+          category: 'Gestion de Compte',
+          items: [
+            { label: 'Comptes', icon: 'fas fa-wallet' },
+            { label: 'Transférer de l\'argent', icon: 'fas fa-exchange-alt' },
+          ]
+        },
+        {
+          category: 'Services',
+          items: [
+            { label: 'Outils financiers', icon: 'fas fa-tools' },
+            { label: 'Contrôle de carte', icon: 'fas fa-credit-card' },
+            { label: 'Envoyer de l\'argent', icon: 'fas fa-paper-plane' },
+          ]
+        },
+        {
+          category: 'Autres',
+          items: [
+            { label: 'Services supplémentaires', icon: 'fas fa-plus-circle' },
+            { label: 'Déconnexion', icon: 'fas fa-sign-out-alt' },
+          ]
+        }
+      ],
       currentDate: new Date(),
       daysOfWeek: ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'],
       calculatorButtons: ['C', '±', '%', '÷', '7', '8', '9', '×', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '='],
       selectedCurrency: '€', // Default currency symbol
+      isMobileMenuOpen: false
     };
   },
   setup() {
@@ -190,12 +282,52 @@ export default {
       }
       return `${this.selectedCurrency}${amount}`;
     },
+    handleMobileNavClick(item) {
+      this.isMobileMenuOpen = false;
+    this.handleNavClick(item);
+    },
   },
 };
 </script>
 
 <style scoped>
+.translate-y-0 {
+  transform: translateY(0);
+}
+
+.-translate-y-full {
+  transform: translateY(-100%);
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
 .calendar-day {
   transition: background-color 0.3s;
+}
+
+.from-goldColor {
+  --tw-gradient-from: #D4AF37;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(212 175 55 / 0));
+}
+
+.to-yellow-600 {
+  --tw-gradient-to: #CA8A04;
+}
+
+/* Dropdown animations */
+.group:hover .group-hover\:rotate-180 {
+  transform: rotate(180deg);
+}
+
+.group:hover .group-hover\:translate-y-0 {
+  transform: translateY(0);
+}
+
+/* Enhanced transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
 }
 </style>
