@@ -63,12 +63,10 @@
   <div class="bg-gradient-to-r from-black to-goldColor py-8 sm:py-16 animate__animated animate__fadeInRight">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 items-center px-4 sm:px-8 mx-auto max-w-screen-xl">
     <div class="flex flex-col justify-center items-start -mt-6">
-      <!-- Responsive heading -->
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight sm:leading-normal mb-3 sm:mb-4 text-white font-mona">
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight sm:leading-normal mb-3 sm:mb-4 text-white font-mona animate__animated animate__fadeInLeft">
         Votre partenaire financier tout-en-un
       </h1>
-      <!-- Responsive paragraph -->
-      <p class="mb-4 text-base sm:text-lg font-mona text-white leading-relaxed">
+      <p class="mb-4 text-base sm:text-lg font-mona text-white leading-relaxed animate__animated animate__fadeInLeft animate__delay-1s">
         Notre fintech vous propose des solutions innovantes pour gérer vos finances en toute simplicité.
         Avec des frais réduits, des transferts rapides, et une carte de débit intuitive, nous facilitons l'accès aux services bancaires pour tous.
       </p>
@@ -116,98 +114,153 @@
   </div>
 
   <!-- Features section -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-center px-4 sm:px-8 mx-auto max-w-screen-xl mt-8 sm:mt-16">
-    <div class="flex flex-col justify-center items-start">
-      <h3 class="text-xl sm:text-2xl font-bold leading-tight sm:leading-normal mb-3 sm:mb-4 text-goldColor font-mona">
-        1. Transfert Rapide
-      </h3>
-      <p class="mb-4 text-base sm:text-lg font-mona text-white leading-relaxed">
-        Profitez d'un transfert instantané, sécurisé et sans tracas pour vos besoins financiers. Rapidité et efficacité garanties.
-      </p>
-    </div>
-    <div class="flex flex-col justify-center items-start">
-      <h3 class="text-xl sm:text-2xl font-bold leading-tight sm:leading-normal mb-3 sm:mb-4 text-goldColor font-mona">
-        2. Système Facile à Utiliser
-      </h3>
-      <p class="mb-4 text-base sm:text-lg font-mona text-white leading-relaxed">
-        Interface intuitive pour des opérations rapides et sans effort. Simplifiez vos tâches quotidiennes facilement.
-      </p>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 px-4 sm:px-8 mx-auto max-w-screen-xl mt-8 sm:mt-16">
+      <div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 transform hover:scale-105 transition-all duration-300">
+        <h3 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-goldColor font-mona">
+          1. Transfert Rapide
+        </h3>
+        <p class="text-base sm:text-lg font-mona text-white/90 leading-relaxed">
+          Profitez d'un transfert instantané, sécurisé et sans tracas pour vos besoins financiers. Rapidité et efficacité garanties.
+        </p>
+      </div>
+      <div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 transform hover:scale-105 transition-all duration-300">
+        <h3 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-goldColor font-mona">
+          2. Système Facile à Utiliser
+        </h3>
+        <p class="text-base sm:text-lg font-mona text-white/90 leading-relaxed">
+          Interface intuitive pour des opérations rapides et sans effort. Simplifiez vos tâches quotidiennes facilement.
+        </p>
+      </div>
     </div>
   </div>
 </div>
-    <!-- Section 1: Importance of Bank Account -->
-    <div class="bg-white py-16 animate__animated animate__fadeInLeft">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-8 mx-auto max-w-screen-xl">
-        <div class="flex justify-center items-center">
-          <!-- Image placeholder -->
-          <img src="../assets/images/man-holding-card.png" alt="Personal Bank" class="max-w-lg rounded-lg">
-        </div>
-        <div class="flex flex-col justify-center items-start">
-          <h1 class="text-2xl font-bold mb-4 font-mona text-goldColor">Pourquoi un compte bancaire est important ?</h1>
-          <p class="mb-4 text-lg font-mona">
+
+<!-- Bank Account Importance Section -->
+<div class="relative bg-white py-16 lg:py-24 overflow-hidden">
+  <!-- Background decoration -->
+  <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+
+  <div class="relative max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-12 md:gap-x-16 items-center">
+      <!-- Content Section -->
+      <div class="order-1 md:order-2 animate__animated animate__fadeInRight">
+        <div class="space-y-6">
+          <span class="inline-block px-4 py-1 rounded-full bg-goldColor/10 text-goldColor text-sm font-semibold tracking-wide">
+            Éducation Financière
+          </span>
+
+          <h2 class="text-3xl md:text-4xl font-bold font-mona bg-gradient-to-r from-goldColor to-amber-500 bg-clip-text text-transparent">
+            Pourquoi un compte bancaire est important ?
+          </h2>
+
+          <p class="text-gray-600 text-lg leading-relaxed font-mona">
             Un compte bancaire vous donne accès à des services essentiels comme les paiements, l'épargne, et la gestion de vos finances.
             C'est un élément crucial pour assurer votre sécurité financière et profiter d'une meilleure gestion de votre argent au quotidien.
           </p>
+          <div class="relative group order-2 md:order-1 animate__animated animate__fadeInLeft">
+        <div class="absolute -inset-2 bg-gradient-to-r from-goldColor/20 to-amber-500/20 rounded-xl blur-xl group-hover:blur-2xl transition duration-500"></div>
+        <div class="relative overflow-hidden rounded-2xl shadow-2xl">
+          <img
+            src="../assets/images/man-holding-card.png"
+            alt="Personal Bank"
+            class="w-full h-auto transform transition duration-700 group-hover:scale-105"
+            loading="lazy"
+          >
+            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          </div>
+        </div>
+
           <router-link
             to="/education/account-benefits"
-            class="bg-goldColor text-black rounded py-2 px-4 hover:bg-goldColor-light transition duration-300 text-center"
+            class="group inline-flex items-center gap-2 px-6 py-3 bg-goldColor text-black rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-goldColor/30 transform hover:-translate-y-0.5"
           >
-            En savoir plus
+            <span>En savoir plus</span>
+            <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
           </router-link>
         </div>
       </div>
     </div>
-
-    <!-- Section 2: Why Choose Our Fintech -->
-    <div class="bg-gray-100 py-16 animate__animated animate__fadeInRight">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-8 mx-auto max-w-screen-xl">
-        <div class="flex flex-col justify-center items-start">
-          <h1 class="text-2xl font-bold mb-4 font-mona text-goldColor">Pourquoi choisir notre fintech ?</h1>
-          <p class="mb-4 text-lg">
-            Notre fintech vous propose des solutions innovantes pour gérer vos finances en toute simplicité.
-            Avec des frais réduits, des transferts rapides, et une carte de débit intuitive, nous facilitons l'accès aux services bancaires pour tous.
-          </p>
-          <router-link
-            to="/education/financial-literacy"
-            class="bg-goldColor text-black rounded py-2 px-4 hover:bg-goldColor-light transition duration-300 text-center"
-          >
-            Découvrir nos services
-          </router-link>
-        </div>
-        <div class="flex justify-center items-center">
-          <!-- Image placeholder -->
-          <img src="../assets/images/payment-by-phone.png" alt="Fintech Solutions" class="max-w-lg rounded-lg">
-        </div>
-      </div>
-    </div>
-
-    <footer class="bg-white dark:bg-black">
-      <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
-        <div class="sm:flex sm:items-center sm:justify-between">
-          <a href="https://flowbite.com/" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
-              <img src="../assets/images/meya-logo.png" class="h-10" alt="Meya Logo" />
-              <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Meya</span>
-          </a>
-          <ul class="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
-              <li>
-                  <a href="#" class="hover:underline me-4 md:me-6">About</a>
-              </li>
-              <li>
-                  <a href="#" class="hover:underline me-4 md:me-6">Privacy Policy</a>
-              </li>
-              <li>
-                  <a href="#" class="hover:underline me-4 md:me-6">Licensing</a>
-              </li>
-              <li>
-                  <a href="#" class="hover:underline">Contact</a>
-              </li>
-          </ul>
-        </div>
-        <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-        <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="https://flowbite.com/" class="hover:underline">Meya™</a>. All Rights Reserved.</span>
-      </div>
-    </footer>
   </div>
+</div>
+
+<!-- Why Choose Our Fintech Section -->
+<div class="relative bg-gradient-to-r from-gray-50 to-gray-100 py-16 sm:py-24 overflow-hidden">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 items-center px-4 sm:px-8 mx-auto max-w-screen-xl">
+    <!-- Content Section -->
+    <div class="flex flex-col justify-center items-start space-y-6 animate__animated animate__fadeInLeft">
+      <div class="inline-block">
+        <span class="bg-goldColor/10 text-goldColor text-sm font-semibold px-3 py-1 rounded-full">
+          Notre Vision
+        </span>
+      </div>
+
+      <h2 class="text-3xl sm:text-4xl font-bold mb-4 font-mona bg-gradient-to-r from-goldColor to-amber-500 bg-clip-text text-transparent">
+        Pourquoi choisir notre fintech ?
+      </h2>
+
+      <p class="text-gray-600 text-base sm:text-lg leading-relaxed">
+        Notre fintech vous propose des solutions innovantes pour gérer vos finances en toute simplicité.
+        Avec des frais réduits, des transferts rapides, et une carte de débit intuitive, nous facilitons l'accès aux services bancaires pour tous.
+      </p>
+    </div>
+    <!-- Image Section -->
+    <div class="flex justify-center items-center relative animate__animated animate__fadeInRight">
+      <!-- Decorative background elements -->
+      <div class="absolute -z-10 w-72 h-72 bg-goldColor/10 rounded-full blur-3xl"></div>
+      <div class="relative group perspective-1000">
+        <div class="absolute -inset-1 bg-gradient-to-r from-goldColor to-amber-500 rounded-lg blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+        <img
+          src="../assets/images/payment-by-phone.png"
+          alt="Fintech Solutions"
+          class="relative rounded-lg shadow-2xl transform transition-all duration-500 hover:scale-105 max-w-full md:max-w-lg xl:max-w-xl group-hover:rotate-y-12"
+          loading="lazy"
+        >
+      </div>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-4 pt-4">
+      <router-link
+        to="/education/financial-literacy"
+        class="group relative inline-flex items-center justify-center px-6 py-3 bg-goldColor text-black rounded-lg overflow-hidden transition-all duration-300 ease-out hover:scale-105 hover:shadow-lg"
+      >
+        <span class="relative flex items-center gap-2">
+          Découvrir nos services
+          <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </span>
+      </router-link>
+    </div>
+  </div>
+</div>
+
+  <footer class="bg-white dark:bg-black">
+    <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+      <div class="sm:flex sm:items-center sm:justify-between">
+        <a href="https://flowbite.com/" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
+            <img src="../assets/images/meya-logo.png" class="h-10" alt="Meya Logo" />
+            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Meya</span>
+        </a>
+        <ul class="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
+            <li>
+                <a href="#" class="hover:underline me-4 md:me-6">About</a>
+            </li>
+            <li>
+                <a href="#" class="hover:underline me-4 md:me-6">Privacy Policy</a>
+            </li>
+            <li>
+                <a href="#" class="hover:underline me-4 md:me-6">Licensing</a>
+            </li>
+            <li>
+                <a href="#" class="hover:underline">Contact</a>
+            </li>
+        </ul>
+      </div>
+      <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+      <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="https://flowbite.com/" class="hover:underline">Meya™</a>. All Rights Reserved.</span>
+    </div>
+  </footer>
 </template>
 
 <script>
@@ -309,5 +362,87 @@ export default {
 .backdrop-blur-sm {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+}
+.bg-grid-pattern {
+  background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* 3D Transform utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.rotate-y-12 {
+  transform: rotateY(12deg);
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced hover states */
+.hover\:shadow-lg:hover {
+  --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+/* Gradient text support */
+.bg-clip-text {
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Animation utilities */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  .px-6 {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .py-3 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+}
+
+/* Hover effects */
+.group:hover .group-hover\:rotate-y-12 {
+  transform: rotateY(12deg);
+}
+
+.group:hover .group-hover\:translate-x-1 {
+  transform: translateX(0.25rem);
+}
+
+/* Loading states */
+.blur-loading {
+  animation: blurPulse 1.5s infinite;
+}
+
+@keyframes blurPulse {
+  0%, 100% { filter: blur(0px); }
+  50% { filter: blur(4px); }
 }
 </style>
