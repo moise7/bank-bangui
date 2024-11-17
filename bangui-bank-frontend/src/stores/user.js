@@ -3,6 +3,7 @@ import axios from 'axios';
 
 // Define API base URL here, use environment variable or default to localhost
 const API_BASE_URL = process.env.VUE_APP_API_BASE_URL || 'http://localhost:3000';
+const EXCHANGE_RATE_API_KEY = '63ba201cc54aa08a5db80f44';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -10,7 +11,12 @@ export const useUserStore = defineStore('user', {
     token: localStorage.getItem('token') || null,
     userId: localStorage.getItem('userId') || null, // Load user ID from localStorage
     towns: [],
-    payments: []
+    payments: [],
+    exchangeRates: null,
+    lastRatesUpdate: null,
+    baseCurrency: 'EUR',
+    selectedCurrency: '€',
+    isLoadingRates: false
   }),
   actions: {
     async loginUser(credentials) {
@@ -93,9 +99,70 @@ export const useUserStore = defineStore('user', {
       localStorage.removeItem('token');
       localStorage.removeItem('userId'); // Clear persisted user ID
     },
+    async fetchExchangeRates() {
+      // Check if rates were fetched in the last hour
+      const oneHourAgo = new Date(Date.now() - 3600000);
+      if (this.exchangeRates && this.lastRatesUpdate > oneHourAgo) {
+        return this.exchangeRates;
+      }
+
+      this.isLoadingRates = true;
+      try {
+        const response = await axios.get(
+          `https://v6.exchangerate-api.com/v6/${EXCHANGE_RATE_API_KEY}/latest/${this.baseCurrency}`
+        );
+
+        this.exchangeRates = response.data.conversion_rates;
+        this.lastRatesUpdate = new Date();
+        return this.exchangeRates;
+      } catch (error) {
+        console.error('Error fetching exchange rates:', error);
+        throw error;
+      } finally {
+        this.isLoadingRates = false;
+      }
+    },
+    setSelectedCurrency(currency) {
+      this.selectedCurrency = currency;
+    },
+    convertAmount(amount) {
+      if (!this.exchangeRates) return amount;
+
+      const rates = {
+        '€': 1, // EUR (base currency)
+        '$': this.exchangeRates.USD,
+        'CFA': this.exchangeRates.XAF
+      };
+
+      const rate = rates[this.selectedCurrency] || 1;
+      return (amount * rate).toFixed(2);
+    },
   },
   getters: {
     isAuthenticated: (state) => !!state.user, // Return true if user is logged in
+    formattedAmount: (state) => (amount) => {
+      const converted = state.convertAmount(amount);
+
+      switch (state.selectedCurrency) {
+        case 'CFA':
+          return `${converted} CFA`;
+        case '$':
+          return `$${converted}`;
+        default:
+          return `€${converted}`;
+      }
+    },
+    currentExchangeRates: (state) => {
+      if (!state.exchangeRates) return null;
+
+      return {
+        USD: state.exchangeRates.USD,
+        XAF: state.exchangeRates.XAF,
+        EUR: 1
+      };
+    }
   },
-  persist: true, // Ensure state persistence with Pinia's persistence plugin if enabled
+  persist: {
+    paths: ['user', 'token', 'userId', 'selectedCurrency', 'exchangeRates', 'lastRatesUpdate']
+  },
 });

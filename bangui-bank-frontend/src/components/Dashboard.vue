@@ -4,6 +4,7 @@
   <!-- Desktop Navigation -->
   <div class="hidden sm:flex justify-between items-center max-w-7xl mx-auto px-4 py-3">
     <div class="flex flex-wrap gap-6">
+      <!-- Categories -->
       <div v-for="(category, index) in navItems" :key="index" class="relative group">
         <button class="flex items-center gap-2 hover:text-white transition-colors duration-200 font-medium">
           {{ category.category }}
@@ -11,19 +12,27 @@
         </button>
 
         <!-- Dropdown Menu -->
-        <div class="absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform -translate-y-2 group-hover:translate-y-0">
+        <div class="absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
           <div class="py-2">
             <a v-for="item in category.items"
                :key="item.label"
-               href="#"
-               @click="handleNavClick(item.label)"
-               class="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition-colors duration-200">
+               @click.prevent="handleNavClick(item.label)"
+               class="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
               <i :class="[item.icon, 'w-5 text-goldColor']"></i>
               {{ item.label }}
             </a>
           </div>
         </div>
       </div>
+
+      <!-- Logout Icon -->
+      <button
+        @click="handleLogout"
+        class="flex items-center gap-2 hover:text-white transition-colors duration-200"
+        title="Déconnexion"
+      >
+        <i class="fas fa-sign-out-alt text-white text-xl"></i>
+      </button>
     </div>
   </div>
 
@@ -33,11 +42,17 @@
       <div class="text-xl font-semibold flex items-center gap-2">
         <i class="fas fa-bars"></i> Menu
       </div>
-      <button @click="isMobileMenuOpen = !isMobileMenuOpen"
-              class="text-black focus:outline-none">
-        <i class="fas fa-chevron-down transition-transform duration-200"
-           :class="{ 'transform rotate-180': isMobileMenuOpen }"></i>
-      </button>
+      <div class="flex items-center gap-4">
+        <button
+          @click="handleLogout"
+          class="hover:text-white transition-colors duration-200"
+        >
+          <i class="fas fa-sign-out-alt text-white text-xl"></i>
+        </button>
+        <button @click="isMobileMenuOpen = !isMobileMenuOpen">
+          <i class="fas fa-chevron-down"></i>
+        </button>
+      </div>
     </div>
 
     <!-- Mobile Menu Dropdown -->
@@ -72,18 +87,45 @@
          v-if="userStore.user && userStore.user.username">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold">Compte Principal</h2>
-        <select v-model="selectedCurrency"
-                class="p-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-goldColor focus:border-transparent">
-          <option value="€">Euro (€)</option>
-          <option value="$">Dollar ($)</option>
-          <option value="CFA">CFA Franc (CFA)</option>
-        </select>
+
+        <div class="flex items-center gap-4">
+          <!-- Currency Selector with Exchange Rate Info -->
+          <div class="relative group">
+            <select
+              v-model="userStore.selectedCurrency"
+              class="p-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-goldColor"
+              :disabled="userStore.isLoadingRates"
+            >
+              <option value="€">Euro (€)</option>
+              <option value="$">Dollar ($)</option>
+              <option value="CFA">CFA Franc (CFA)</option>
+            </select>
+
+            <!-- Exchange Rate Tooltip -->
+            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-3 hidden group-hover:block z-50">
+              <p class="text-sm text-gray-600">Taux de change actuels:</p>
+              <div v-if="userStore.currentExchangeRates" class="mt-1">
+                <p class="text-xs">1 EUR =</p>
+                <p class="text-xs">$ {{ userStore.currentExchangeRates.USD }} USD</p>
+                <p class="text-xs">{{ userStore.currentExchangeRates.XAF }} CFA</p>
+              </div>
+              <p class="text-xs text-gray-400 mt-2">
+                Dernière mise à jour: {{ userStore.lastRatesUpdate ? new Date(userStore.lastRatesUpdate).toLocaleTimeString() : 'Jamais' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Loading Indicator -->
+          <div v-if="userStore.isLoadingRates" class="animate-spin text-goldColor">
+            <i class="fas fa-sync-alt"></i>
+          </div>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-gradient-to-r from-goldColor to-yellow-600 p-6 rounded-lg text-white">
           <p class="text-sm opacity-80">Solde disponible</p>
-          <p class="text-3xl font-bold mt-1">{{ formattedBalance }}</p>
+          <p class="text-3xl font-bold mt-1">{{ userStore.formattedAmount(userStore.user.balance) }}</p>
         </div>
 
         <div class="bg-gray-50 p-6 rounded-lg">
@@ -114,7 +156,7 @@
             <div class="flex-1">{{ new Date(payment.created_at).toLocaleDateString('fr-FR') }}</div>
             <div class="flex-1">{{ payment.recipient_first_name }} {{ payment.recipient_last_name }}</div>
             <div class="flex-1">{{ payment.description }}</div>
-            <div class="flex-1">{{ formatCurrency(payment.amount) }}</div>
+            <div class="flex-1">{{ userStore.formattedAmount(payment.amount) }}</div>
           </li>
         </ul>
       </div>
@@ -188,8 +230,11 @@ export default {
       currentDate: new Date(),
       daysOfWeek: ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'],
       calculatorButtons: ['C', '±', '%', '÷', '7', '8', '9', '×', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '='],
-      selectedCurrency: '€', // Default currency symbol
-      isMobileMenuOpen: false
+      isMobileMenuOpen: false,
+      logoutButton: {
+        icon: 'fas fa-sign-out-alt',
+        action: 'logout'
+      }
     };
   },
   setup() {
@@ -208,7 +253,7 @@ export default {
     onMounted(async () => {
       await userStore.fetchUserData();
       await userStore.fetchPayments();
-      console.log('test', userStore.fetchPayments());
+      await userStore.fetchExchangeRates();
     });
 
     return {
@@ -217,9 +262,6 @@ export default {
     };
   },
   computed: {
-    formattedBalance() {
-      return this.formatCurrency(this.userStore.user.balance);
-    },
     currentMonthYear() {
       return this.currentDate.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
     },
@@ -276,16 +318,14 @@ export default {
         }
       }
     },
-    formatCurrency(amount) {
-      if (this.selectedCurrency === 'CFA') {
-        return `${amount} CFA`;
-      }
-      return `${this.selectedCurrency}${amount}`;
-    },
     handleMobileNavClick(item) {
       this.isMobileMenuOpen = false;
     this.handleNavClick(item);
     },
+    handleLogout() {
+      this.userStore.logout();
+      this.router.push('/');
+    }
   },
 };
 </script>
@@ -306,28 +346,16 @@ export default {
   transition: background-color 0.3s;
 }
 
-.from-goldColor {
-  --tw-gradient-from: #D4AF37;
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(212 175 55 / 0));
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.to-yellow-600 {
-  --tw-gradient-to: #CA8A04;
-}
-
-/* Dropdown animations */
-.group:hover .group-hover\:rotate-180 {
-  transform: rotate(180deg);
-}
-
-.group:hover .group-hover\:translate-y-0 {
-  transform: translateY(0);
-}
-
-/* Enhanced transitions */
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 </style>

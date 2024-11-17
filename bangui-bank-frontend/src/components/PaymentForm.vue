@@ -1,62 +1,136 @@
 <template>
-  <div class="relative min-h-screen bg-gray-100 p-4 font-mona">
-    <!-- Initial Loading Screen -->
-    <div v-if="loading" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-      <div class="text-white text-lg" aria-live="assertive">{{ loadingMessage }}</div>
+  <div class="relative min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 font-mona">
+    <!-- Loading Overlay -->
+    <div v-if="loading"
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm">
+      <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-goldColor border-t-transparent"></div>
+        <p class="mt-4 text-gray-700">{{ loadingMessage }}</p>
+      </div>
     </div>
 
-    <!-- Success Message Notification -->
-    <div v-if="showSuccessNotification" class="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transform translate-y-10 transition-transform duration-300 ease-in-out z-40" aria-live="polite">
-      <div class="flex items-center justify-between">
+    <!-- Success Notification -->
+    <div v-if="showSuccessNotification"
+         class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl transform transition-all duration-300 ease-out z-40"
+         :class="showSuccessNotification ? 'translate-y-0' : 'translate-y-full'">
+      <div class="flex items-center gap-3">
+        <i class="fas fa-check-circle text-xl"></i>
         <span>{{ successNotificationMessage }}</span>
-        <button class="ml-4 p-1 text-white hover:text-gray-200" @click="showSuccessNotification = false" aria-label="Close notification">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M4.293 5.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-          </svg>
+        <button @click="showSuccessNotification = false"
+                class="ml-2 hover:text-gray-200 transition-colors">
+          <i class="fas fa-times"></i>
         </button>
       </div>
     </div>
 
-    <!-- Form -->
-    <div class="flex flex-col items-center justify-center">
-      <form @submit.prevent="makePayment" class="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
-        <div class="mb-4">
-          <label for="receiver-email" class="block text-sm font-medium text-gray-700 mb-1">Email du destinataire :</label>
-          <input type="email" v-model="receiverEmail" required
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Entrez l'email du destinataire" aria-label="Email du destinataire" />
-        </div>
-        <div class="mb-4">
-          <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description :</label>
-          <input type="text" v-model="description" required
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Entrez la description du paiement" aria-label="Description" />
-        </div>
-        <div class="mb-6">
-          <label for="amount" class="block text-sm font-medium text-gray-700 mb-1">Montant :</label>
-          <input type="number" v-model="amount" required min="0.01" step="0.01"
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Entrez le montant" aria-label="Montant" />
-        </div>
-        <div class="flex justify-between">
-          <button type="submit"
-                  class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out">
-            Effectuer le paiement
-          </button>
-          <button @click="goToDashboard" type="button"
-                  class="inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-200 ease-in-out">
-            Aller au tableau de bord
-          </button>
-        </div>
-        <div v-if="error" class="mt-4 text-red-600 text-sm">{{ error }}</div>
-      </form>
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto mt-8">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Transfert d'argent</h1>
+        <p class="text-gray-600">Envoyez de l'argent à un autre membre de Bangui Bank</p>
+      </div>
+
+      <!-- Form Card -->
+      <div class="bg-white rounded-xl shadow-xl p-6 md:p-8">
+        <form @submit.prevent="makePayment" class="space-y-6">
+          <!-- Balance Information -->
+          <div class="bg-gray-50 rounded-lg p-4 mb-6">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Solde disponible:</span>
+              <span class="text-xl font-bold text-gray-800">
+                {{ userStore.user?.balance || '0.00' }} €
+              </span>
+            </div>
+          </div>
+
+          <!-- Receiver Email -->
+          <div class="space-y-2">
+            <label for="receiver-email" class="block text-sm font-medium text-gray-700">
+              Email du destinataire
+            </label>
+            <div class="relative">
+              <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="email"
+                     v-model="receiverEmail"
+                     required
+                     class="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-goldColor focus:border-transparent"
+                     placeholder="exemple@bangui-bank.com" />
+            </div>
+          </div>
+
+          <!-- Amount -->
+          <div class="space-y-2">
+            <label for="amount" class="block text-sm font-medium text-gray-700">
+              Montant à envoyer
+            </label>
+            <div class="relative">
+              <i class="fas fa-coins absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="number"
+                     v-model="amount"
+                     required
+                     min="0.01"
+                     step="0.01"
+                     class="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-goldColor focus:border-transparent"
+                     placeholder="0.00" />
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="space-y-2">
+            <label for="description" class="block text-sm font-medium text-gray-700">
+              Description
+            </label>
+            <div class="relative">
+              <i class="fas fa-comment absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="text"
+                     v-model="description"
+                     required
+                     class="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-goldColor focus:border-transparent"
+                     placeholder="Motif du transfert" />
+            </div>
+          </div>
+
+          <!-- Error Message -->
+          <div v-if="error"
+               class="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+            <div class="flex items-center">
+              <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+              <p class="text-red-700">{{ error }}</p>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 pt-4">
+            <button type="submit"
+                    class="flex-1 bg-goldColor hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
+              <i class="fas fa-paper-plane"></i>
+              Envoyer
+            </button>
+            <button @click="goToDashboard"
+                    type="button"
+                    class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
+              <i class="fas fa-arrow-left"></i>
+              Retour au tableau de bord
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Security Notice -->
+      <div class="mt-8 text-center text-sm text-gray-600">
+        <p class="flex items-center justify-center gap-2">
+          <i class="fas fa-shield-alt"></i>
+          Vos transactions sont sécurisées et cryptées
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 
@@ -72,6 +146,12 @@ export default {
     const successNotificationMessage = ref('');
     const loading = ref(false);
     const showSuccessNotification = ref(false);
+    const userBalance = ref(0);
+
+    // Fetch user data when component mounts
+    onMounted(async () => {
+      await userStore.fetchUserData();
+    });
 
     const makePayment = async () => {
       try {
@@ -80,7 +160,7 @@ export default {
         successNotificationMessage.value = '';
         showSuccessNotification.value = false;
 
-        const response = await axios.post('http://localhost:3000/api/v1/payments', {
+        const response = await axios.post(`${API_BASE_URL}/api/v1/payments`, {
           payment: {
             receiver_email: receiverEmail.value,
             amount: Number(amount.value),
@@ -122,8 +202,54 @@ export default {
       loading,
       showSuccessNotification,
       makePayment,
-      goToDashboard
+      goToDashboard,
+      userStore
     };
   }
 };
 </script>
+
+<style scoped>
+.from-goldColor {
+  --tw-gradient-from: #D4AF37;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(212 175 55 / 0));
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 640px) {
+  .max-w-4xl {
+    width: 100%;
+  }
+
+  .p-6 {
+    padding: 1rem;
+  }
+
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+}
+
+/* Input Focus Styles */
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+}
+
+/* Smooth Transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+</style>

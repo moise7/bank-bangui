@@ -50,6 +50,12 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :api do
+    namespace :v1 do
+      get 'exchange_rates/latest', to: 'exchange_rates#latest'
+    end
+  end
+
   # Define other routes
   get '/member-data', to: 'members#show'
   root 'home#index' # Root route for the application
