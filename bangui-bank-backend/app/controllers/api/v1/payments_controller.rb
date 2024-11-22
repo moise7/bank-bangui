@@ -1,38 +1,46 @@
 class Api::V1::PaymentsController < ApplicationController
-  before_action :authenticate_user! # Ensure user is authenticated
+  before_action :authenticate_user!
 
   def create
-    sender = current_user
-    receiver = User.find_by(email: payment_params[:receiver_email])
+    ActiveRecord::Base.transaction do  # Wrap in transaction for atomicity
+      sender = current_user
+      receiver = User.find_by(email: payment_params[:receiver_email])
 
-    if receiver.nil?
-      return render json: { error: 'Receiver not found' }, status: :not_found
+      validate_payment(sender, receiver)
+      amount = payment_params[:amount].to_f
+
+      # Update balances within transaction
+      sender.with_lock do
+        sender.update!(balance: sender.balance - amount)
+      end
+
+      receiver.with_lock do
+        receiver.update!(balance: receiver.balance + amount)
+      end
+
+      payment = Payment.create!(
+        user_id: sender.id,
+        recipient_id: receiver.id,
+        amount: amount,
+        description: payment_params[:description],
+        status: 'completed'  # Add status tracking
+      )
+
+      # Move email to background job
+      PaymentNotificationJob.perform_later(payment.id)
+
+      render json: {
+        message: 'Payment successful',
+        balance: sender.balance,
+        payment: payment
+      }, status: :ok
     end
-
-    if sender.balance < payment_params[:amount].to_f
-      return render json: { error: 'Insufficient funds' }, status: :unprocessable_entity
-    end
-
-    # Update sender's balance
-    sender.update!(balance: sender.balance - payment_params[:amount].to_f)
-
-    # Update receiver's balance
-    receiver.update!(balance: receiver.balance + payment_params[:amount].to_f)
-
-    # Create the payment record
-    Payment.create!(
-      user_id: sender.id,
-      recipient_id: receiver.id,
-      amount: payment_params[:amount].to_f,
-      description: payment_params[:description]
-    )
-
-    # Send email notification
-    send_notification(sender, receiver, payment_params[:amount].to_f)
-
-    render json: { message: 'Payment successful', balance: sender.balance }, status: :ok
-  rescue StandardError => e
+  rescue ValidationError => e  # Custom error for payment validations
     render json: { error: e.message }, status: :unprocessable_entity
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: 'Transaction failed: ' + e.message }, status: :unprocessable_entity
+  rescue StandardError => e
+    render json: { error: 'An unexpected error occurred' }, status: :internal_server_error
   end
 
   def index
@@ -62,14 +70,13 @@ class Api::V1::PaymentsController < ApplicationController
     params.require(:payment).permit(:receiver_email, :amount, :description)
   end
 
-  def send_notification(sender, receiver, amount)
-    message = "Payment Successful: You sent $#{amount} to #{receiver.email}. Your remaining balance is $#{sender.balance}."
-
-    SendGridClient.new.send_email(
-      from: 'marketingmoise@gmail.com',
-      to: sender.email,
-      subject: 'Payment Notification',
-      content: message
-    )
+  def validate_payment(sender, receiver)
+    raise ValidationError, 'Receiver not found' if receiver.nil?
+    raise ValidationError, 'Cannot transfer to yourself' if sender == receiver
+    raise ValidationError, 'Invalid amount' if payment_params[:amount].to_f <= 0
+    raise ValidationError, 'Insufficient funds' if sender.balance < payment_params[:amount].to_f
   end
 end
+
+# Add this class at the top of the file or in a separate file
+class ValidationError < StandardError; end
