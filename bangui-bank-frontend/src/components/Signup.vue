@@ -7,7 +7,8 @@
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="text"
         v-model="firstName"
-        placeholder="Prénom"
+        placeholder="Prénom *"
+        required
       />
 
       <!-- Middle Name -->
@@ -15,7 +16,7 @@
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="text"
         v-model="middleName"
-        placeholder="Deuxième Prénom"
+        placeholder="Deuxième Prénom (optionnel)"
       />
 
       <!-- Last Name -->
@@ -23,7 +24,8 @@
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="text"
         v-model="lastName"
-        placeholder="Nom de Famille"
+        placeholder="Nom de Famille *"
+        required
       />
 
       <!-- Date of Birth -->
@@ -35,7 +37,8 @@
             v-model="dateOfBirth"
             :min="minDate"
             :max="maxDate"
-            :placeholder="'JJ/MM/AAAA'"
+            :placeholder="'JJ/MM/AAAA *'"
+            required
           />
           <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
             <i class="fas fa-calendar"></i>
@@ -47,42 +50,44 @@
       <select
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         v-model="country"
+        required
       >
-        <option disabled value="">Sélectionnez un Pays</option>
+        <option disabled value="">Sélectionnez un Pays *</option>
         <option value="République Centrafricaine">République Centrafricaine</option>
         <option value="Autre Pays">Autre Pays</option>
       </select>
 
       <!-- Town Dropdown -->
       <div v-if="country === 'République Centrafricaine'" class="relative">
-  <select
-    class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-    v-model="town"
-    :disabled="isLoadingTowns"
-  >
-    <option disabled value="">
-      {{ isLoadingTowns ? 'Chargement des villes...' : 'Sélectionnez une Ville' }}
-    </option>
-    <option v-for="townItem in towns" :key="townItem" :value="townItem">
-      {{ townItem }}
-    </option>
-  </select>
+      <select
+        class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        v-model="town"
+        :disabled="isLoadingTowns"
+      >
+        <option disabled value="">
+          {{ isLoadingTowns ? 'Chargement des villes...' : 'Sélectionnez une Ville' }}
+        </option>
+        <option v-for="townItem in towns" :key="townItem" :value="townItem">
+          {{ townItem }}
+        </option>
+      </select>
 
-  <!-- Loading indicator -->
-  <div v-if="isLoadingTowns" class="absolute right-3 top-1/2 -translate-y-1/2">
-    <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-    </svg>
-  </div>
-</div>
+      <!-- Loading indicator -->
+      <div v-if="isLoadingTowns" class="absolute right-3 top-1/2 -translate-y-1/2">
+        <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+      </div>
 
       <!-- Phone Number -->
       <input
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="text"
         v-model="phoneNumber"
-        placeholder="Numéro de Téléphone"
+        placeholder="Numéro de Téléphone *"
+        required
       />
 
       <!-- Username -->
@@ -90,7 +95,8 @@
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="text"
         v-model="username"
-        placeholder="Nom d'utilisateur"
+        placeholder="Nom d'utilisateur *"
+        required
       />
 
       <!-- Email -->
@@ -98,7 +104,8 @@
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="email"
         v-model="email"
-        placeholder="Email"
+        placeholder="Email *"
+        required
       />
 
       <!-- Password -->
@@ -106,7 +113,8 @@
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="password"
         v-model="password"
-        placeholder="Mot de Passe"
+        placeholder="Mot de Passe *"
+        required
       />
 
       <!-- Confirm Password -->
@@ -114,7 +122,8 @@
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="password"
         v-model="passwordConfirmation"
-        placeholder="Confirmez le Mot de Passe"
+        placeholder="Confirmez le Mot de Passe *"
+        required
       />
 
       <!-- Submit Button -->
