@@ -139,6 +139,11 @@ export default {
         resetSuccess.value = true;
         // Clear the query parameter after showing the message
         router.replace({ query: {} });
+
+        // Auto-hide success message after 5 seconds
+        setTimeout(() => {
+          resetSuccess.value = false;
+        }, 8000); // Hide after 8 seconds
       }
     });
 
@@ -170,7 +175,7 @@ export default {
         // Auto-hide success message after 5 seconds
         setTimeout(() => {
           resetSuccess.value = false;
-        }, 9000);
+        }, 8000);
       } catch (error) {
         resetError.value = error.response?.data?.error ||
           'Erreur lors de la demande de réinitialisation. Veuillez réessayer.';

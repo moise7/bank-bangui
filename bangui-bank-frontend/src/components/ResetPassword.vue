@@ -9,23 +9,42 @@
         enter-from-class="translate-y-2 opacity-0"
         enter-to-class="translate-y-0 opacity-100"
       >
-        <div v-if="showSuccess" class="mb-4 p-4 bg-green-50 rounded-lg flex items-start border-l-4 border-green-400">
-          <div class="flex-shrink-0">
-            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
+        <div v-if="showEmailSuccess || showResetSuccess">
+          <!-- Email Sent Success -->
+          <div v-if="showEmailSuccess" class="mb-4 p-4 bg-green-50 rounded-lg flex items-start border-l-4 border-green-400">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-green-800">
+                Instructions envoyées !
+              </p>
+              <p class="mt-1 text-sm text-green-700">
+                Veuillez vérifier votre boîte de réception pour réinitialiser votre mot de passe.
+              </p>
+            </div>
           </div>
-          <div class="ml-3">
-            <p class="text-sm font-medium text-green-800">
-              Instructions envoyées !
-            </p>
-            <p class="mt-1 text-sm text-green-700">
-              Veuillez vérifier votre boîte de réception pour réinitialiser votre mot de passe.
-            </p>
+
+          <!-- Password Reset Success -->
+          <div v-if="showResetSuccess" class="mb-4 p-4 bg-green-50 rounded-lg flex items-start border-l-4 border-green-400">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-green-800">
+                Mot de passe réinitialisé !
+              </p>
+              <p class="mt-1 text-sm text-green-700">
+                Votre mot de passe a été modifié avec succès. Vous allez être redirigé vers la page de connexion.
+              </p>
+            </div>
           </div>
         </div>
       </transition>
-
       <!-- Error Message -->
       <transition
         enter-active-class="transform ease-out duration-300 transition"
@@ -96,23 +115,20 @@ export default {
     const isResetting = ref(false);
     const error = ref('');
     const resetToken = ref('');
-    const email = ref('');
-    const showSuccess = ref(false);
+    const showEmailSuccess = ref(false);    // For email sent confirmation
+    const showResetSuccess = ref(false);    // For password reset confirmation
 
     onMounted(() => {
       resetToken.value = route.query.reset_password_token;
-      console.log('Reset token from URL:', resetToken.value); // Debug log
+      console.log('Reset token from URL:', resetToken.value);
       if (!resetToken.value) {
         error.value = 'Token de réinitialisation manquant';
       }
     });
 
-
-    // ResetPassword.vue
     const handleReset = async () => {
       try {
         error.value = '';
-        console.log('Starting reset with token:', resetToken.value); // Debug log
 
         if (!resetToken.value) {
           error.value = 'Token de réinitialisation invalide';
@@ -131,29 +147,25 @@ export default {
 
         isResetting.value = true;
 
-        const resetData = {
-          user: {
-            reset_password_token: resetToken.value,
-            password: newPassword.value
-          }
-        };
-
-        console.log('Sending reset data:', resetData); // Debug log
-
         // Call the resetPassword function from the store
         await userStore.resetPassword(resetToken.value, newPassword.value);
 
-        showSuccess.value = true;
+        // Show reset success message
+        showResetSuccess.value = true;
+        showEmailSuccess.value = false;  // Hide email success if it was showing
 
+        // Redirect after showing success message
         setTimeout(() => {
           router.push({
             path: '/login',
-            query: { reset_success: 'true' }
+            query: { reset_complete: 'true' }
           });
         }, 2000);
+
       } catch (err) {
-        console.error('Reset error:', err.response?.data || err); // Debug log
-        error.value = err.response?.data?.error || 'Erreur lors de la réinitialisation. Veuillez réessayer.';
+        console.error('Reset error:', err.response?.data || err);
+        error.value = err.response?.data?.error ||
+          'Erreur lors de la réinitialisation. Veuillez réessayer.';
       } finally {
         isResetting.value = false;
       }
@@ -165,7 +177,9 @@ export default {
       isResetting,
       handleReset,
       error,
-      showSuccess  // Added this line
+      showEmailSuccess,     // Return new success states
+      showResetSuccess,     // Return new success states
+      route
     };
   },
 };
