@@ -167,39 +167,26 @@ export const useUserStore = defineStore('user', {
         throw error;
       }
     },
+    // This resets the password after clicking the email link
+    // stores/user.js
+    async resetPassword(token, password) {
+      try {
+        console.log('Attempting reset with token:', token); // Debug log
 
-    // async forgotPassword(email) {
-    //   try {
-    //     const response = await axiosInstance.post(`${API_BASE_URL}/api/v1/password/forgot`, {
-    //       user: {
-    //         email: {
-    //           user: {
-    //             email
-    //           }
-    //         }
-    //       }
-    //     });
-    //     return response.data;
-    //   } catch (error) {
-    //     console.error('Password reset request failed:', error);
-    //     throw error;
-    //   }
-    // },
+        const response = await axiosInstance.post(`${API_BASE_URL}/api/v1/password/reset`, {
+          user: {
+            reset_password_token: token,
+            password: password
+          }
+        });
 
-    // async resetPassword(token, password) {
-    //   try {
-    //     const response = await axiosInstance.post(`${API_BASE_URL}/api/v1/password/reset`, {
-    //       user: {
-    //         reset_password_token: token,
-    //         password: password
-    //       }
-    //     });
-    //     return response.data;
-    //   } catch (error) {
-    //     console.error('Password reset failed:', error);
-    //     throw error;
-    //   }
-    // },
+        return response.data;
+      } catch (error) {
+        console.error('Password reset failed:', error.response?.data || error);
+        throw error;
+      }
+    },
+    // This sends the initial reset password email
     async requestPasswordReset(email) {
       try {
         const response = await axiosInstance.post(`${API_BASE_URL}/api/v1/password/forgot`, {
@@ -211,18 +198,6 @@ export const useUserStore = defineStore('user', {
         throw error;
       }
     },
-
-    // async requestPasswordReset(email) {
-    //   try {
-    //     const response = await axiosInstance.post(`${API_BASE_URL}/api/v1/password/forgot`, {
-    //       user: { email }  // Send email directly without nesting
-    //     });
-    //     return response.data;
-    //   } catch (error) {
-    //     console.error('Password reset request failed:', error);
-    //     throw error;
-    //   }
-    // },
 
     async verifyToken() {
       if (!this.token) return false;

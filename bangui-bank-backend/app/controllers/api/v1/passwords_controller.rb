@@ -30,17 +30,21 @@ class Api::V1::PasswordsController < ApplicationController
 
   def reset
     token = params.dig(:user, :reset_password_token)
-    password = params.dig(:user, :password)
+    Rails.logger.info "Received token for reset: #{token}"
 
     user = User.with_reset_password_token(token)
 
-    if user && user.reset_password(password, password)
+    if user.nil?
+      render json: {
+        error: 'Invalid or expired reset token'
+      }, status: :unprocessable_entity
+    elsif user.reset_password(params.dig(:user, :password), params.dig(:user, :password))
       render json: {
         message: 'Password has been reset successfully.'
       }, status: :ok
     else
       render json: {
-        error: 'Invalid or expired reset token'
+        error: 'Failed to reset password'
       }, status: :unprocessable_entity
     end
   end

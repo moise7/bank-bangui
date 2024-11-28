@@ -101,15 +101,18 @@ export default {
 
     onMounted(() => {
       resetToken.value = route.query.reset_password_token;
+      console.log('Reset token from URL:', resetToken.value); // Debug log
       if (!resetToken.value) {
         error.value = 'Token de réinitialisation manquant';
       }
-      console.log('Reset token from URL:', resetToken.value);
     });
 
+
+    // ResetPassword.vue
     const handleReset = async () => {
       try {
         error.value = '';
+        console.log('Starting reset with token:', resetToken.value); // Debug log
 
         if (!resetToken.value) {
           error.value = 'Token de réinitialisation invalide';
@@ -128,13 +131,20 @@ export default {
 
         isResetting.value = true;
 
+        const resetData = {
+          user: {
+            reset_password_token: resetToken.value,
+            password: newPassword.value
+          }
+        };
+
+        console.log('Sending reset data:', resetData); // Debug log
+
         // Call the resetPassword function from the store
         await userStore.resetPassword(resetToken.value, newPassword.value);
 
-        // Show success message
         showSuccess.value = true;
 
-        // Wait 2 seconds before redirecting
         setTimeout(() => {
           router.push({
             path: '/login',
@@ -142,6 +152,7 @@ export default {
           });
         }, 2000);
       } catch (err) {
+        console.error('Reset error:', err.response?.data || err); // Debug log
         error.value = err.response?.data?.error || 'Erreur lors de la réinitialisation. Veuillez réessayer.';
       } finally {
         isResetting.value = false;
