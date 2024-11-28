@@ -1,27 +1,45 @@
-# app/controllers/api/v1/sessions_controller.rb
 class Api::V1::SessionsController < ApplicationController
-  skip_before_action :verify_authenticity_token
+  skip_before_action :authenticate_user!, only: [:create]
 
   def create
     user = User.find_by(username: session_params[:username])
-    Rails.logger.debug("User found: #{user.inspect}")
-    if user && user.valid_password?(session_params[:password])
-      jti = SecureRandom.uuid  # Generate a unique identifier for the JWT
-      token = JwtService.encode(user_id: user.id, jti: jti) # Include the new jti in the token
+    Rails.logger.debug("Login attempt for username: #{session_params[:username]}")
 
-      # Update the user's jti in the database
-      user.update(jti: jti)
+    if user&.valid_password?(session_params[:password])
+      jti = SecureRandom.uuid
+      token = JwtService.encode({ user_id: user.id, jti: jti })
 
-      render json: { user: user.as_json(only: [:id, :username]), token: token }, status: :ok
+      # Update only the jti
+      if user.update(jti: jti)
+        render json: {
+          status: :success,
+          user: user.as_json(only: [:id, :username, :email]),
+          token: token
+        }, status: :ok
+      else
+        Rails.logger.error("Failed to update user JTI: #{user.errors.full_messages}")
+        render json: { error: 'Erreur lors de la connexion' }, status: :internal_server_error
+      end
     else
-      Rails.logger.debug("Invalid username or password.")
-      render json: { error: 'Invalid username or password' }, status: :unauthorized
+      Rails.logger.debug("Authentication failed for username: #{session_params[:username]}")
+      render json: {
+        error: 'Nom d\'utilisateur ou mot de passe invalide'
+      }, status: :unauthorized
     end
+  rescue => e
+    Rails.logger.error "Login error: #{e.message}\n#{e.backtrace.join("\n")}"
+    render json: {
+      error: 'Une erreur est survenue lors de la connexion'
+    }, status: :internal_server_error
   end
 
   def destroy
-    # Handle the logout process if required
-    head :no_content
+    if current_user
+      current_user.update(jti: SecureRandom.uuid)
+      render json: { message: 'Déconnexion réussie' }, status: :ok
+    else
+      render json: { error: 'Non autorisé' }, status: :unauthorized
+    end
   end
 
   private

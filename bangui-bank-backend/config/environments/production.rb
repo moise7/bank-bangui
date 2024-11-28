@@ -81,6 +81,15 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+   # Add frontend URL configuration
+   config.x.frontend_url = 'https://bangui-bank.fly.dev'
+
+   # Add mailer configurations
+   config.action_mailer.default_url_options = {
+     host: config.x.frontend_url
+   }
+
+
   config.action_mailer.smtp_settings = {
     address: 'smtp.sendgrid.net',
     port: 587,
@@ -91,6 +100,8 @@ Rails.application.configure do
     enable_starttls_auto: true
   }
 
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com

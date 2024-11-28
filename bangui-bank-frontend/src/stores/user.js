@@ -168,10 +168,16 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    async requestPasswordReset(email) {
+    async forgotPassword(email) {
       try {
         const response = await axiosInstance.post(`${API_BASE_URL}/api/v1/password/forgot`, {
-          user: { email: email }
+          user: {
+            email: {
+              user: {
+                email
+              }
+            }
+          }
         });
         return response.data;
       } catch (error) {
@@ -185,16 +191,38 @@ export const useUserStore = defineStore('user', {
         const response = await axiosInstance.post(`${API_BASE_URL}/api/v1/password/reset`, {
           user: {
             reset_password_token: token,
-            password: password,
-            password_confirmation: password
+            password: password
           }
         });
         return response.data;
       } catch (error) {
-        console.error('Password reset failed:', error.response?.data || error);
+        console.error('Password reset failed:', error);
         throw error;
       }
     },
+    // async requestPasswordReset(email) {
+    //   try {
+    //     const response = await axiosInstance.post(`${API_BASE_URL}/api/v1/password/forgot`, {
+    //       user: { email: email }
+    //     });
+    //     return response.data;
+    //   } catch (error) {
+    //     console.error('Password reset request failed:', error);
+    //     throw error;
+    //   }
+    // },
+
+    // async requestPasswordReset(email) {
+    //   try {
+    //     const response = await axiosInstance.post(`${API_BASE_URL}/api/v1/password/forgot`, {
+    //       user: { email }  // Send email directly without nesting
+    //     });
+    //     return response.data;
+    //   } catch (error) {
+    //     console.error('Password reset request failed:', error);
+    //     throw error;
+    //   }
+    // },
 
     async verifyToken() {
       if (!this.token) return false;

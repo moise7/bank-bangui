@@ -15,8 +15,10 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   # Single default_url_options setting
+  config.x.frontend_url = 'http://localhost:8080'
+  
   config.action_mailer.default_url_options = {
-    host: ENV['FRONTEND_URL'] || 'http://localhost:8080'
+    host: config.x.frontend_url
   }
 
   # SendGrid SMTP settings

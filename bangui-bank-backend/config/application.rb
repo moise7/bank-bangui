@@ -28,7 +28,14 @@ module DeviseVue
     # config.assets.enabled = true
     config.autoload_paths << Rails.root.join('lib')
 
+    config.x.frontend_url = ENV.fetch('FRONTEND_URL') do
+      Rails.env.production? ? 'https://bangui-bank.fly.dev' : 'http://localhost:8080'
+    end
 
+    # Add default URL options for mailers
+    config.action_mailer.default_url_options = {
+      host: ENV.fetch('FRONTEND_URL') { config.x.frontend_url }
+    }
 
     # Configuration for the application, engines, and railties goes here.
     #
