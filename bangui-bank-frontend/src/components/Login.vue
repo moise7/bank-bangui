@@ -3,9 +3,33 @@
     <h3 class="text-3xl font-extrabold text-gray-700 mb-6">Content de vous revoir !</h3>
 
     <!-- Success Message -->
-    <div v-if="resetSuccess" class="w-full max-w-md mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
-      Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.
-    </div>
+    <transition
+      enter-active-class="transform ease-out duration-300 transition"
+      enter-from-class="translate-y-2 opacity-0"
+      enter-to-class="translate-y-0 opacity-100"
+      leave-active-class="transition ease-in duration-100"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="resetSuccess"
+        class="w-full max-w-md mb-4 p-4 bg-green-50 rounded-lg flex items-start border-l-4 border-green-400"
+      >
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm font-medium text-green-800">
+            Instructions envoyées !
+          </p>
+          <p class="mt-1 text-sm text-green-700">
+            Veuillez vérifier votre boîte de réception pour réinitialiser votre mot de passe.
+          </p>
+        </div>
+      </div>
+    </transition>
 
     <!-- Error Message -->
     <div v-if="resetError" class="w-full max-w-md mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
@@ -140,7 +164,13 @@ export default {
           }
         });
         closeResetModal();
-        alert('Les instructions de réinitialisation ont été envoyées à votre email.');
+        // Remove the alert and show the success message instead
+        resetSuccess.value = true;
+
+        // Auto-hide success message after 5 seconds
+        setTimeout(() => {
+          resetSuccess.value = false;
+        }, 9000);
       } catch (error) {
         resetError.value = error.response?.data?.error ||
           'Erreur lors de la demande de réinitialisation. Veuillez réessayer.';
