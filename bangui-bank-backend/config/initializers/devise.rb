@@ -13,7 +13,8 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
+  config.mailer = 'UserMailer'
+  config.mailer_sender = 'marketingmoise@gmail.com'
 
   # ==> ORM configuration
   # Load and configure the ORM. Supports :active_record (default) and
@@ -96,6 +97,7 @@ Devise.setup do |config|
   # Time interval you can reset your password with a reset password key.
   # Don't put a too small interval or your users won't have the time to
   # change their passwords.
+  config.reset_password_keys = [:email]
   config.reset_password_within = 6.hours
   # The "*/*" below is required to match Internet Explorer requests.
   config.navigational_formats = ['*/*', :html, :turbo_stream]

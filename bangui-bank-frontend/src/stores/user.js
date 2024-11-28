@@ -168,6 +168,34 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    async requestPasswordReset(email) {
+      try {
+        const response = await axiosInstance.post(`${API_BASE_URL}/api/v1/password/forgot`, {
+          user: { email: email }
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Password reset request failed:', error);
+        throw error;
+      }
+    },
+
+    async resetPassword(token, password) {
+      try {
+        const response = await axiosInstance.post(`${API_BASE_URL}/api/v1/password/reset`, {
+          user: {
+            reset_password_token: token,
+            password: password,
+            password_confirmation: password
+          }
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Password reset failed:', error.response?.data || error);
+        throw error;
+      }
+    },
+
     async verifyToken() {
       if (!this.token) return false;
 

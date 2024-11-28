@@ -41,12 +41,27 @@ class ApplicationController < ActionController::Base
     auth_header = request.headers['Authorization']
     token = auth_header.split(' ').last if auth_header
 
-    begin
-      decoded_token = JwtService.decode(token)
-      @current_user = User.find_by(id: decoded_token["user_id"], jti: decoded_token["jti"])
-      render json: { error: 'Unauthorized' }, status: :unauthorized unless @current_user
-    rescue JWT::DecodeError
-      render json: { error: 'Invalid token' }, status: :unauthorized
+    def authenticate_user!
+      return if user_signed_in?
+
+      auth_header = request.headers['Authorization']
+      token = auth_header.split(' ').last if auth_header
+
+      begin
+        decoded_token = JwtService.decode(token)
+        @current_user = User.find_by(id: decoded_token["user_id"], jti: decoded_token["jti"])
+        render json: { error: 'Unauthorized' }, status: :unauthorized unless @current_user
+      rescue JWT::DecodeError
+        render json: { error: 'Invalid token' }, status: :unauthorized
+      end
+    end
+
+    def user_signed_in?
+      !!current_user
+    end
+
+    def current_user
+      @current_user
     end
   end
 end

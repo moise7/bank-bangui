@@ -14,12 +14,54 @@
         v-model="loginPassword"
         placeholder="Mot de passe"
       />
+      <div class="flex justify-end mb-4">
+        <button
+          type="button"
+          @click="showResetModal = true"
+          class="text-sm text-yellow-500 hover:text-yellow-600"
+        >
+          Mot de passe oublié ?
+        </button>
+      </div>
       <input
         type="submit"
         value="Se connecter"
         class="w-full py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-300 cursor-pointer"
       />
     </form>
+
+     <!-- Password Reset Modal -->
+     <div v-if="showResetModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-lg p-6 w-full max-w-md">
+        <h4 class="text-xl font-bold mb-4">Réinitialiser le mot de passe</h4>
+        <form @submit.prevent="requestPasswordReset">
+          <input
+            type="email"
+            v-model="resetEmail"
+            placeholder="Votre adresse email"
+            class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+            required
+          />
+          <div class="flex justify-end space-x-3">
+            <button
+              type="button"
+              @click="showResetModal = false"
+              class="px-4 py-2 text-gray-600 hover:text-gray-800"
+            >
+              Annuler
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
+              :disabled="isResetting"
+            >
+              {{ isResetting ? 'Envoi...' : 'Envoyer' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <div v-if="loginError" class="text-red-500 mt-4">
       {{ loginError }}
     </div>
@@ -49,6 +91,26 @@ export default {
     const loginUsername = ref("");
     const loginPassword = ref("");
     const loginError = ref(null);
+    const showResetModal = ref(false);
+    const resetEmail = ref("");
+    const isResetting = ref(false);
+
+
+    const requestPasswordReset = async () => {
+      if (!resetEmail.value) return;
+
+      isResetting.value = true;
+      try {
+        await userStore.requestPasswordReset(resetEmail.value);
+        showResetModal.value = false;
+        alert('Les instructions de réinitialisation ont été envoyées à votre email.');
+      } catch (error) {
+        alert('Erreur lors de la demande de réinitialisation. Veuillez réessayer.');
+      } finally {
+        isResetting.value = false;
+        resetEmail.value = "";
+      }
+    };
 
     const onLogin = async (event) => {
       event.preventDefault();
@@ -79,6 +141,10 @@ export default {
       loginPassword,
       loginError,
       onLogin,
+      showResetModal,
+      resetEmail,
+      isResetting,
+      requestPasswordReset
     };
   },
 };

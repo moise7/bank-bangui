@@ -43,6 +43,8 @@ Rails.application.routes.draw do
         delete 'sign_out', to: 'sessions#destroy'
         # Route for sign-up handled by the registrations controller
         post 'sign_up', to: 'registrations#create'
+        post 'password/forgot', to: 'passwords#forgot'
+        post 'password/reset', to: 'passwords#reset'
       end
       resources :payments, only: [:index, :create]
       # Only define necessary RESTful routes for users

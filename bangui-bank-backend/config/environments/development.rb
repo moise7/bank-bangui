@@ -8,18 +8,31 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.enable_reloading = true
 
+  # Email Configuration - Group all mailer settings together
   config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_caching = false
+
+  # Single default_url_options setting
+  config.action_mailer.default_url_options = {
+    host: ENV['FRONTEND_URL'] || 'http://localhost:8080'
+  }
+
+  # SendGrid SMTP settings
   config.action_mailer.smtp_settings = {
     address: 'smtp.sendgrid.net',
     port: 587,
-    domain: 'example.com',
-    user_name: 'apikey',  # Use 'apikey' for SendGrid SMTP authentication
-    password: Rails.application.credentials.dig(:sendgrid, :api_key),
+    domain: 'localhost',
+    user_name: 'apikey',
+    password: ENV['SENDGRID_API_KEY'],
     authentication: 'plain',
     enable_starttls_auto: true
   }
 
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  # Add debugging for mail delivery
+  config.action_mailer.logger = Logger.new(STDOUT)
+  config.action_mailer.logger.level = Logger::DEBUG
 
   # Do not eager load code on boot.
   config.eager_load = false
@@ -51,8 +64,6 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.perform_caching = false
-
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
@@ -71,7 +82,6 @@ Rails.application.configure do
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
 
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3001 }
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 

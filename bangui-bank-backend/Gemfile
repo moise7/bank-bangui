@@ -23,7 +23,6 @@ gem 'twilio-ruby'
 gem 'sendgrid-ruby'
 
 # Frontend & Assets
-gem "tailwindcss-rails"
 gem "jsbundling-rails"
 # Development tools
 group :development, :test do
@@ -35,3 +34,5 @@ group :development do
   gem 'foreman'
   gem "dockerfile-rails", ">= 1.6"
 end
+
+gem 'dotenv-rails', groups: [:development, :test]

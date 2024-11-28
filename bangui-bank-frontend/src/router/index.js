@@ -44,6 +44,11 @@ const routes = [
         component: DigitalBanking,
         name: 'digital-banking',
         meta: { title: 'Services Numériques' }
+      },
+      {
+        path: '/reset-password',
+        name: 'ResetPassword',
+        component: () => import('@/components/ResetPassword.vue')
       }
     ]
   },

@@ -51,6 +51,27 @@ class User < ApplicationRecord
     end
   end
 
+  # Generate reset token
+  def generate_password_reset_token!
+    self.password_reset_token = SecureRandom.urlsafe_base64
+    self.password_reset_sent_at = Time.current
+    save!
+  end
+
+  # Check if reset token is expired
+  def password_reset_expired?
+    password_reset_sent_at < 2.hours.ago
+  end
+
+  def reset_password_period_valid?
+    reset_password_sent_at && reset_password_sent_at.utc >= 6.hours.ago.utc
+  end
+
+  # Check if reset token is valid (token must exist and not be expired)
+  def reset_password_token_valid?
+    password_reset_token.present? && !password_reset_expired?
+  end
+
   private
 
   def generate_jti
