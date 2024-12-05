@@ -24,6 +24,8 @@ gem 'sendgrid-ruby'
 
 # Frontend & Assets
 gem "jsbundling-rails"
+gem "cssbundling-rails"
+
 # Development tools
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
