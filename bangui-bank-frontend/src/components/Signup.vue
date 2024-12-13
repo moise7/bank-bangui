@@ -109,22 +109,39 @@
       />
 
       <!-- Password -->
-      <input
-        class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-        type="password"
-        v-model="password"
-        placeholder="Mot de Passe *"
-        required
-      />
+    <label for="password" class="block text-gray-700 font-medium mb-2">Mot de Passe *</label>
+    <input
+      id="password"
+      class="w-full p-3 mb-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="password"
+      v-model="password"
+      placeholder="Mot de Passe *"
+      @input="evaluateStrength"
+      required
+    />
+    <!-- Password Strength Meter -->
+    <div class="w-full h-2 bg-gray-300 rounded mb-2">
+      <div
+        :class="strengthClass"
+        :style="{ width: strengthPercentage + '%' }"
+        class="h-full rounded transition-all duration-300"
+      ></div>
+    </div>
+    <p class="text-sm mb-4" :class="messageClass">{{ strengthMessage }}</p>
 
-      <!-- Confirm Password -->
-      <input
-        class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-        type="password"
-        v-model="passwordConfirmation"
-        placeholder="Confirmez le Mot de Passe *"
-        required
-      />
+    <!-- Confirm Password -->
+    <label for="passwordConfirmation" class="block text-gray-700 font-medium mb-2">Confirmez le Mot de Passe *</label>
+    <input
+      id="passwordConfirmation"
+      class="w-full p-3 mb-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+      type="password"
+      v-model="passwordConfirmation"
+      placeholder="Confirmez le Mot de Passe *"
+      @input="validatePasswordMatch"
+      required
+    />
+    <!-- Password Match Validation -->
+    <p v-if="passwordError" class="text-red-500 text-sm">{{ passwordError }}</p>
 
       <!-- Submit Button -->
       <button
@@ -180,9 +197,62 @@ export default {
     const signUpError = ref(null);
     const isLoadingTowns = ref(false);
 
+    // Password Strength Meter
+    const strengthPercentage = ref(0);
+    const strengthMessage = ref("");
+    const strengthClass = ref("bg-red-500");
+    const passwordError = ref("");
+
+    const evaluateStrength = () => {
+      const score = calculateStrength(password.value);
+      updateStrength(score);
+    };
+
+    const calculateStrength = (password) => {
+      let score = 0;
+
+      if (password.length >= 8) score += 1;
+      if (/[A-Z]/.test(password)) score += 1;
+      if (/[a-z]/.test(password)) score += 1;
+      if (/\d/.test(password)) score += 1;
+      if (/\W/.test(password)) score += 1;
+
+      return score;
+    };
+
+    const updateStrength = (score) => {
+      const levels = [
+        { class: "bg-red-500", message: "Faible", percentage: 20 },
+        { class: "bg-yellow-500", message: "Moyen", percentage: 60 },
+        { class: "bg-green-500", message: "Fort", percentage: 100 },
+      ];
+
+      if (score <= 2) {
+        strengthClass.value = levels[0].class;
+        strengthMessage.value = levels[0].message;
+        strengthPercentage.value = levels[0].percentage;
+      } else if (score === 3 || score === 4) {
+        strengthClass.value = levels[1].class;
+        strengthMessage.value = levels[1].message;
+        strengthPercentage.value = levels[1].percentage;
+      } else if (score === 5) {
+        strengthClass.value = levels[2].class;
+        strengthMessage.value = levels[2].message;
+        strengthPercentage.value = levels[2].percentage;
+      }
+    };
+
+    const validatePasswordMatch = () => {
+      if (passwordConfirmation.value && password.value !== passwordConfirmation.value) {
+        passwordError.value = "Les mots de passe ne correspondent pas.";
+      } else {
+        passwordError.value = "";
+      }
+    };
+
     // Optimized towns fetching function
     const fetchTowns = async () => {
-      if (isLoadingTowns.value || towns.value.length > 0) return; // Prevent duplicate fetches
+      if (isLoadingTowns.value || towns.value.length > 0) return;
 
       isLoadingTowns.value = true;
       try {
@@ -269,7 +339,13 @@ export default {
       signUpError,
       onSignUp,
       isLoadingTowns,
-      showTowns
+      showTowns,
+      strengthPercentage,
+      strengthMessage,
+      strengthClass,
+      passwordError,
+      evaluateStrength,
+      validatePasswordMatch,
     };
   },
 };
