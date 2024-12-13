@@ -2,7 +2,9 @@ import { defineStore } from 'pinia';
 import axiosInstance from '@/utils/axios';
 
 // Define API base URL here, use environment variable or default to localhost
-const API_BASE_URL = process.env.VUE_APP_API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.VUE_APP_API_BASE_URL;
+console.log('API_BASE_URL:', process.env.VUE_APP_API_BASE_URL);
+
 const EXCHANGE_RATE_API_KEY = process.env.VUE_APP_EXCHANGE_RATE_API;
 
 export const useUserStore = defineStore('user', {

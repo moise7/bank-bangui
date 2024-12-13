@@ -9,7 +9,8 @@ class User < ApplicationRecord
          jwt_revocation_strategy: JwtDenylist
 
   # Validations
-  validates :first_name, :middle_name, :last_name, :date_of_birth, :town, :country, presence: true
+  validates :first_name, :last_name, :date_of_birth, :town, :country, presence: true
+  validates :middle_name, presence: false
   validates :username, presence: true, uniqueness: true
   validates :balance, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validate :age_must_be_18_or_older
