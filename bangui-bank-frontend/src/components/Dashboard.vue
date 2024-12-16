@@ -340,7 +340,7 @@ export default {
       await userStore.fetchUserData();
       await userStore.fetchPayments();
       await userStore.fetchExchangeRates();
-      await userStore.fetchBudgetProgress(userId);  // Pass userId to fetchBudgetProgress
+      // await userStore.fetchBudgetProgress(userId);  // Pass userId to fetchBudgetProgress
     });
 
     return {

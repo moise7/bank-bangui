@@ -62,15 +62,15 @@ Rails.application.routes.draw do
   end
 
   # Budgets API
-  namespace :api do
-    namespace :v1 do
-      resources :budgets, only: [:show] do
-        member do
-          get 'progress', to: 'budgets#show_progress'
-        end
-      end
-    end
-  end
+  # namespace :api do
+  #   namespace :v1 do
+  #     resources :budgets, only: [:show] do
+  #       member do
+  #         get 'progress', to: 'budgets#show_progress'
+  #       end
+  #     end
+  #   end
+  # end
 
   # Other API route
   namespace :api do

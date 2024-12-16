@@ -213,23 +213,23 @@ export const useUserStore = defineStore('user', {
         return false;
       }
     },
-    async fetchBudgetProgress() {
-      if (!this.token || !this.userId) {
-        console.error('No token or user ID found, please login');
-        return;
-      }
+    // async fetchBudgetProgress() {
+    //   if (!this.token || !this.userId) {
+    //     console.error('No token or user ID found, please login');
+    //     return;
+    //   }
 
-      try {
-        // Use userId instead of budgetId to get the progress
-        const response = await axiosInstance.get(`${API_BASE_URL}/api/v1/budgets/${this.user.id}/show_progress`, {
-          headers: { Authorization: `Bearer ${this.token}` },
-        });
-        this.budgetProgress = response.data; // Store the budget progress data
-        console.log('Budget Progress:', this.budgetProgress);
-      } catch (error) {
-        console.error('Failed to fetch budget progress:', error.response ? error.response.data : error.message);
-      }
-    }
+    //   try {
+    //     // Use userId instead of budgetId to get the progress
+    //     const response = await axiosInstance.get(`${API_BASE_URL}/api/v1/budgets/${this.user.id}/show_progress`, {
+    //       headers: { Authorization: `Bearer ${this.token}` },
+    //     });
+    //     this.budgetProgress = response.data; // Store the budget progress data
+    //     console.log('Budget Progress:', this.budgetProgress);
+    //   } catch (error) {
+    //     console.error('Failed to fetch budget progress:', error.response ? error.response.data : error.message);
+    //   }
+    // }
 
   },
   getters: {
