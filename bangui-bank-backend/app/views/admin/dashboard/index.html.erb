@@ -54,7 +54,12 @@
         <td><%= user.username %></td>
         <td><%= number_to_currency(user.balance || 0) %></td>
         <td>
-          <%= link_to 'Add Money', add_money_admin_user_path(user), class: 'action-link' %>
+          <div class="actions">
+            <%= link_to 'Add Money', add_money_admin_user_path(user), class: 'action-link' %>
+            <%= form_with(url: admin_user_path(user), method: :delete, data: { confirm: 'Are you sure?' }, class: 'delete-form') do %>
+              <%= submit_tag 'Delete', class: 'action-link' %>
+            <% end %>
+          </div>
         </td>
       </tr>
     <% end %>

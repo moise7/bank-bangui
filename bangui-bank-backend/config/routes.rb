@@ -22,14 +22,15 @@ Rails.application.routes.draw do
   # Admin namespace routes
   namespace :admin do
     root 'dashboard#index' # Admin dashboard root route
-    resources :users, only: [:index, :show] do
+    resources :users, only: [:index, :show, :destroy] do
       member do
-        get 'add_money'    # Custom route for adding money
-        post 'update_balance' # To handle the actual update
+        get 'add_money'        # Custom route for adding money
+        post 'update_balance'  # To handle the actual update
       end
     end
   end
 
+  # API namespace routes
   namespace :api do
     namespace :v1 do
       # Custom routes for sessions and users
@@ -46,19 +47,21 @@ Rails.application.routes.draw do
         post 'password/forgot', to: 'passwords#forgot'
         post 'password/reset', to: 'passwords#reset'
       end
+
       resources :payments, only: [:index, :create]
       # Only define necessary RESTful routes for users
       resources :users, only: [:index, :create, :update, :destroy]
     end
   end
 
+  # Exchange rates API
   namespace :api do
     namespace :v1 do
       get 'exchange_rates/latest', to: 'exchange_rates#latest'
     end
   end
 
-
+  # Budgets API
   namespace :api do
     namespace :v1 do
       resources :budgets, only: [:show] do
@@ -69,6 +72,7 @@ Rails.application.routes.draw do
     end
   end
 
+  # Other API route
   namespace :api do
     get 'check-username', to: 'users#check_username'
   end

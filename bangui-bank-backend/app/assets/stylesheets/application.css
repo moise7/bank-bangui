@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* app/assets/stylesheets/application.css or application.scss */
+
+/* Ensure that the actions are displayed inline */
+.actions {
+  display: inline-flex;
+  gap: 10px;
+}
+
+/* Style for action links */
+.action-link {
+  text-decoration: none;
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+}
+
+/* Style for the delete button */
+.delete-button {
+  background-color: red;
+  color: white;
+}
+
+/* Optional: Adjust padding and margins if necessary */
+.delete-form input[type="submit"] {
+  padding: 8px 15px;
+}

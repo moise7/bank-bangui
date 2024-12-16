@@ -32,15 +32,24 @@ class Admin::UsersController < ApplicationController
 
     if amount > 0
       @user.deposit(amount)
-      redirect_to admin_root_path, notice: 'Money added successfully.' # Changed from admin_dashboard_path to admin_root_path
+      redirect_to admin_root_path, notice: 'Money added successfully.'
     else
-      redirect_to admin_root_path, alert: 'Invalid amount.' # Changed from admin_dashboard_path to admin_root_path
+      redirect_to admin_root_path, alert: 'Invalid amount.'
     end
   end
 
+  def destroy
+    @user = User.find(params[:id])
+    if @user.destroy
+      flash[:success] = 'User deleted successfully.'
+    else
+      flash[:error] = 'There was an error deleting the user.'
+    end
+    redirect_to admin_root_path
+  end
   private
 
   def user_params
-    params.require(:user).permit(:email, :username, :balance) # Add other user attributes as needed
+    params.require(:user).permit(:email, :username, :balance)
   end
 end
