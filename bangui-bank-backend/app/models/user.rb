@@ -17,6 +17,13 @@ class User < ApplicationRecord
   validates :balance, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validate :age_must_be_18_or_older
 
+  validates :username,
+  presence: true,
+  uniqueness: { case_sensitive: false },
+  length: { minimum: 3, maximum: 25 },
+  format: { with: /\A[a-zA-Z0-9]+(?:[_\- ][a-zA-Z0-9]+)*\z/, message: "can only contain letters, numbers, underscores, or hyphens" }
+
+  validate :restricted_words
   # Callbacks
   before_create :set_default_balance
   before_create :generate_jti
@@ -99,5 +106,17 @@ class User < ApplicationRecord
 
   def set_default_balance
     self.balance ||= 0.0
+  end
+
+  def normalize_username
+    self.username = username.strip.downcase.gsub(/\s+/, '_') if username.present?
+  end
+
+  # Check for reserved usernames
+  def restricted_words
+    reserved = %w[admin support root superuser]
+    if reserved.include?(username.downcase)
+      errors.add(:username, "is reserved. Please choose a different username.")
+    end
   end
 end

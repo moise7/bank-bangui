@@ -23,6 +23,22 @@ class Api::V1::UsersController < ApplicationController
     render json: { error: 'Internal Server Error' }, status: :internal_server_error
   end
 
+  def check_username
+    username = params[:username].to_s.strip.downcase
+    available = !User.exists?(username: username)
+
+    suggestions = []
+    unless available
+      base = username.gsub(/\W/, '')
+      3.times do
+        suggestions << "#{base}_#{rand(100..999)}"
+      end
+    end
+
+    render json: { available: available, suggestions: suggestions }
+  end
+
+
   private
 
   def authenticate_user!

@@ -69,6 +69,10 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :api do
+    get 'check-username', to: 'users#check_username'
+  end
+
   # Define other routes
   get '/member-data', to: 'members#show'
   root 'home#index' # Root route for the application

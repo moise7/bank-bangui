@@ -54,7 +54,6 @@
       >
         <option disabled value="">Sélectionnez un Pays *</option>
         <option value="République Centrafricaine">République Centrafricaine</option>
-        <option value="Autre Pays">Autre Pays</option>
       </select>
 
       <!-- Town Dropdown -->
@@ -94,10 +93,23 @@
       <input
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="text"
+        id="username"
         v-model="username"
         placeholder="Nom d'utilisateur *"
+        @focus="showUsernameExample = true"
+        @blur="showUsernameExample = false"
         required
       />
+      <div v-if="showUsernameExample" class="username-example">
+        <p>Exemple d'un bon nom d'utilisateur :</p>
+        <p><strong>{{ generateUsernameExample() }}</strong></p>
+        <p>Conseils pour un nom d'utilisateur fort :</p>
+        <ul>
+          <li>Incluez à la fois des lettres et des chiffres</li>
+          <li>Évitez d'utiliser votre nom complet</li>
+          <li>Envisagez d'ajouter des caractères spéciaux comme '_' ou '-' </li>
+        </ul>
+      </div>
 
       <!-- Email -->
       <input
@@ -323,6 +335,12 @@ export default {
       }
     };
 
+    // Add the generateUsernameExample method here
+    const generateUsernameExample = () => {
+      const randomNum = Math.floor(Math.random() * 1000);
+      return `${username.value || 'Utilisateur'}_${randomNum}`;
+    };
+
     return {
       firstName,
       middleName,
@@ -346,6 +364,7 @@ export default {
       passwordError,
       evaluateStrength,
       validatePasswordMatch,
+      generateUsernameExample, // Return it so you can use it in the template
     };
   },
 };
