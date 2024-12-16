@@ -11,6 +11,8 @@ import AccountBenefits from '../components/AccountBenefits.vue';
 import FinancialLiteracy from '../components/FinancialLiteracy.vue';
 import SecurityAwareness from '../components/SecurityAwareness.vue';
 import DigitalBanking from '../components/DigitalBanking.vue';
+import BudgetGraph from '../components/BudgetGraph.vue';
+import GoalTracker from '../components/GoalTracker.vue';
 
 const routes = [
   { path: '/', component: Home },
@@ -43,6 +45,18 @@ const routes = [
         path: 'digital-banking',
         component: DigitalBanking,
         name: 'digital-banking',
+        meta: { title: 'Services Numériques' }
+      },
+      {
+        path: 'budget-graph',
+        component: BudgetGraph,
+        name: 'budget-graph',
+        meta: { title: 'Services Numériques' }
+      },
+      {
+        path: 'goal-tracker',
+        component: GoalTracker,
+        name: 'goal-tracker',
         meta: { title: 'Services Numériques' }
       },
       {

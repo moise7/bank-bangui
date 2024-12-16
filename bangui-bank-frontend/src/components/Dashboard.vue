@@ -191,6 +191,27 @@
         </ul>
       </div>
 
+      <!-- Budget Progress Section -->
+      <div class="budget-progress bg-gray-100 p-4 rounded-md shadow-md">
+        <h3 class="text-xl font-bold mb-4">Progrès du Budget</h3>
+        <!-- Progress Bar -->
+        <div class="progress-bar mb-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-gray-600">Budget Actuel</span>
+            <span class="text-sm font-medium text-gray-600">{{ budgetProgress }}%</span>
+          </div>
+          <div class="relative pt-1">
+            <div class="flex mb-2 items-center justify-between">
+              <div class="w-full bg-gray-200 rounded-full">
+                <div :style="`width: ${budgetProgress}%`" class="bg-goldColor text-xs font-medium text-center p-0.5 leading-none rounded-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Link to full budget page -->
+        <router-link to="/budget" class="text-sm text-goldColor hover:text-black transition-colors">Voir le budget complet</router-link>
+      </div>
+
       <!-- Calculator and Calendar Section -->
       <div class="calculator-and-calendar space-y-4">
         <div class="calculator bg-gray-100 p-4 rounded-md shadow-md">
@@ -308,9 +329,18 @@ export default {
     }
 
     onMounted(async () => {
+      const userId = userStore.user.id;  // Get the user ID directly
+
+      // Ensure the user is logged in and the user ID is available
+      if (!userId) {
+        console.error('No user ID found, please login');
+        return;
+      }
+
       await userStore.fetchUserData();
       await userStore.fetchPayments();
       await userStore.fetchExchangeRates();
+      await userStore.fetchBudgetProgress(userId);  // Pass userId to fetchBudgetProgress
     });
 
     return {

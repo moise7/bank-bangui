@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   # Associations
   has_many :payments
+  has_many :transactions
+  has_many :budgets
 
   # Include default devise modules.
   devise :database_authenticatable, :registerable,
@@ -25,6 +27,16 @@ class User < ApplicationRecord
     if (username = conditions.delete(:username))
       where(conditions).where(["lower(username) = :value", { value: username.downcase }]).first
     end
+  end
+
+  class Transaction < ApplicationRecord
+    belongs_to :user
+    validates :category, :amount, :transaction_date, presence: true
+  end
+
+  class Budget < ApplicationRecord
+    belongs_to :user
+    validates :amount, :start_date, :end_date, presence: true
   end
 
   # Method to deposit funds

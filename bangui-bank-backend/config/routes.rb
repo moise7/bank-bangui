@@ -58,6 +58,17 @@ Rails.application.routes.draw do
     end
   end
 
+
+  namespace :api do
+    namespace :v1 do
+      resources :budgets, only: [:show] do
+        member do
+          get 'progress', to: 'budgets#show_progress'
+        end
+      end
+    end
+  end
+
   # Define other routes
   get '/member-data', to: 'members#show'
   root 'home#index' # Root route for the application

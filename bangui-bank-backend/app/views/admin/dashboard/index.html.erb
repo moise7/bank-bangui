@@ -1,17 +1,21 @@
-<h1>Admin Dashboard</h1>
+<h1 class="dashboard-title">Admin Dashboard</h1>
 
 <!-- Logout link -->
-<%= link_to 'Sign Out', destroy_admin_session_path, method: :delete, data: { confirm: 'Are you sure?' } %>
+<div class="logout">
+  <%= link_to 'Sign Out', destroy_admin_session_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'logout-link' %>
+</div>
 
-<p>Welcome to the admin dashboard!</p>
+<p class="welcome-message">Welcome to the admin dashboard!</p>
 
 <!-- Display total users and balance -->
-<h2>Total Users: <%= @users.count %></h2>
-<h2>Total Balance: $<%= @users.sum { |user| user.balance || 0.0 }.round(2) %></h2>
+<div class="stats">
+  <h2 class="stat-item">Total Users: <%= @users.count %></h2>
+  <h2 class="stat-item">Total Balance: $<%= @users.sum { |user| user.balance || 0.0 }.round(2) %></h2>
+</div>
 
 <!-- Display recent payments -->
-<h3>Recent payments</h3>
-<table>
+<h3 class="section-title">Recent Payments</h3>
+<table class="table recent-payments">
   <thead>
     <tr>
       <th>ID</th>
@@ -31,12 +35,13 @@
 </table>
 
 <!-- Manage Users -->
-<h3>Manage Users</h3>
-<table>
+<h3 class="section-title">Manage Users</h3>
+<table class="table manage-users">
   <thead>
     <tr>
       <th>ID</th>
       <th>Email</th>
+      <th>Username</th>
       <th>Balance</th>
       <th>Actions</th>
     </tr>
@@ -46,9 +51,10 @@
       <tr>
         <td><%= user.id %></td>
         <td><%= user.email %></td>
+        <td><%= user.username %></td>
         <td><%= number_to_currency(user.balance || 0) %></td>
         <td>
-          <%= link_to 'Add Money', add_money_admin_user_path(user) %>
+          <%= link_to 'Add Money', add_money_admin_user_path(user), class: 'action-link' %>
         </td>
       </tr>
     <% end %>

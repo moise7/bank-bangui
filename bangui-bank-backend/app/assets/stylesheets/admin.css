@@ -1,0 +1,84 @@
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f9f9f9;
+}
+
+.dashboard-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.logout {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.logout-link {
+  text-decoration: none;
+  color: #ff4d4d;
+  font-weight: bold;
+}
+
+.welcome-message {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* Stats Section */
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+}
+
+.stat-item {
+  font-size: 1.5rem;
+  color: #444;
+}
+
+/* Tables */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background: #fff;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  color: #555;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Links */
+.action-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.action-link:hover {
+  text-decoration: underline;
+}
