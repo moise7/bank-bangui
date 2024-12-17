@@ -2,12 +2,18 @@ class Api::V1::PaymentsController < ApplicationController
   before_action :authenticate_user!
 
   def create
-    ActiveRecord::Base.transaction do  # Wrap in transaction for atomicity
+    ActiveRecord::Base.transaction do
       sender = current_user
       receiver = User.find_by(email: payment_params[:receiver_email])
 
+      # Log receiver email and sender for debugging
+      logger.debug "Sender: #{sender.email}, Receiver: #{receiver&.email}"
+
       validate_payment(sender, receiver)
       amount = payment_params[:amount].to_f
+
+      # Log the amount being transferred
+      logger.debug "Amount to transfer: #{amount}"
 
       # Update balances within transaction
       sender.with_lock do
@@ -23,7 +29,7 @@ class Api::V1::PaymentsController < ApplicationController
         recipient_id: receiver.id,
         amount: amount,
         description: payment_params[:description],
-        status: 'completed'  # Add status tracking
+        # status: 'completed'
       )
 
       # Move email to background job
@@ -35,16 +41,18 @@ class Api::V1::PaymentsController < ApplicationController
         payment: payment
       }, status: :ok
     end
-  rescue ValidationError => e  # Custom error for payment validations
+  rescue ValidationError => e
+    logger.error "Validation error: #{e.message}"
     render json: { error: e.message }, status: :unprocessable_entity
   rescue ActiveRecord::RecordInvalid => e
+    logger.error "Record invalid: #{e.message}"
     render json: { error: 'Transaction failed: ' + e.message }, status: :unprocessable_entity
   rescue StandardError => e
+    logger.error "Unexpected error: #{e.message}, Backtrace: #{e.backtrace}"
     render json: { error: 'An unexpected error occurred' }, status: :internal_server_error
   end
 
   def index
-    # Fetch payments for the current user
     payments = Payment.where(user_id: current_user.id)
 
     payments_with_recipient = payments.map do |payment|
@@ -78,5 +86,4 @@ class Api::V1::PaymentsController < ApplicationController
   end
 end
 
-# Add this class at the top of the file or in a separate file
 class ValidationError < StandardError; end

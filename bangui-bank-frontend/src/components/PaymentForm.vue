@@ -168,6 +168,10 @@ export default {
 
         successNotificationMessage.value = 'Paiement complété, redirection vers le tableau de bord...';
 
+        receiverEmail.value = '';
+        amount.value = '';
+        description.value = '';
+
         setTimeout(() => {
           showSuccessNotification.value = true;
           setTimeout(() => {
