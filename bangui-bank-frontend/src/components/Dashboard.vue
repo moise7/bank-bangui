@@ -170,8 +170,18 @@
       <div class="payment-history bg-gray-100 p-6 rounded-xl shadow-lg">
         <h3 class="text-2xl font-bold text-gray-800 mb-4">Historique des paiements</h3>
 
+        <!-- Loading Spinner -->
+        <div v-if="userStore.isLoadingPayments" class="flex justify-center">
+          <span class="spinner"></span> <!-- Replace with your loading spinner -->
+        </div>
+
+        <!-- Error Message -->
+        <div v-if="userStore.error" class="text-red-500 mb-4">
+          {{ userStore.error }}
+        </div>
+
         <!-- Table Header -->
-        <div class="flex font-semibold text-gray-700 border-b-2 border-gray-800 mb-2">
+        <div v-if="!userStore.isLoadingPayments && !userStore.error" class="flex font-semibold text-gray-700 border-b-2 border-gray-800 mb-2">
           <div class="flex-1 text-left py-2">Date</div>
           <div class="flex-1 text-left py-2">Nom</div>
           <div class="flex-1 text-left py-2">Description</div>
@@ -179,7 +189,7 @@
         </div>
 
         <!-- Payment History List -->
-        <ul class="list-none p-0">
+        <ul v-if="!userStore.isLoadingPayments && !userStore.error && userStore.payments.length" class="list-none p-0">
           <li
             v-for="(payment, index) in userStore.payments"
             :key="payment.id"
@@ -187,14 +197,18 @@
             class="flex py-4 border-b border-gray-300"
           >
             <div class="flex-1 text-sm text-gray-800">{{ new Date(payment.created_at).toLocaleDateString('fr-FR') }}</div>
-            <div class="flex-1 text-sm text-gray-800">
-              {{ payment.recipient_first_name }}
-            </div>
+            <div class="flex-1 text-sm text-gray-800">{{ payment.recipient_first_name }}</div>
             <div class="flex-1 text-sm text-gray-800">{{ payment.description }}</div>
             <div class="flex-1 text-sm text-gray-800">{{ userStore.formattedAmount(payment.amount) }}</div>
           </li>
         </ul>
+
+        <!-- Empty State -->
+        <div v-if="!userStore.isLoadingPayments && !userStore.error && userStore.payments.length === 0" class="text-gray-500 text-center py-4">
+          Aucun paiement trouvé.
+        </div>
       </div>
+
 
 
       <!-- Budget Progress Section -->
