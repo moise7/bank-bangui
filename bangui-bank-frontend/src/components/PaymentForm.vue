@@ -44,8 +44,23 @@
             </div>
           </div>
 
-          <!-- Receiver Email -->
-          <div class="space-y-2">
+          <!-- Payment Type Selection -->
+          <div class="space-y-4">
+            <label class="block text-sm font-medium text-gray-700">Type de transfert</label>
+            <div class="flex items-center gap-6">
+              <div>
+                <input type="radio" id="user-transfer" value="user" v-model="paymentType" />
+                <label for="user-transfer" class="text-gray-700">Envoyer vers un autre utilisateur</label>
+              </div>
+              <div>
+                <input type="radio" id="mobile-wallet" value="mobile" v-model="paymentType" />
+                <label for="mobile-wallet" class="text-gray-700">Envoyer vers un porte-monnaie mobile</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Receiver Email (Visible if 'user' is selected) -->
+          <div v-if="paymentType === 'user'" class="space-y-2">
             <label for="receiver-email" class="block text-sm font-medium text-gray-700">
               Email du destinataire
             </label>
@@ -57,6 +72,16 @@
                      class="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-goldColor focus:border-transparent"
                      placeholder="exemple@bangui-bank.com" />
             </div>
+          </div>
+
+          <!-- Mobile Wallet Information (Commented Out) -->
+          <div v-if="paymentType === 'mobile'" class="space-y-2 text-center py-6 bg-gray-50 rounded-lg shadow-md">
+            <p class="text-2xl font-bold text-gray-800">
+              Fonctionnalité à venir
+            </p>
+            <p class="text-lg text-gray-600">
+              Cette option sera bientôt disponible.
+            </p>
           </div>
 
           <!-- Amount -->
@@ -139,6 +164,7 @@ export default {
     const router = useRouter();
     const userStore = useUserStore();
     const receiverEmail = ref('');
+    const mobileNumber = ref('');
     const amount = ref('');
     const description = ref('');
     const error = ref('');
@@ -146,7 +172,7 @@ export default {
     const successNotificationMessage = ref('');
     const loading = ref(false);
     const showSuccessNotification = ref(false);
-    const userBalance = ref(0);
+    const paymentType = ref('user');  // 'user' or 'mobile'
 
     // Fetch user data when component mounts
     onMounted(async () => {
@@ -155,13 +181,18 @@ export default {
 
     const makePayment = async () => {
       try {
+        if (paymentType.value === 'mobile') {
+          error.value = 'Cette fonctionnalité sera bientôt disponible.';
+          return;
+        }
+
         loading.value = true;
         error.value = '';
         successNotificationMessage.value = '';
         showSuccessNotification.value = false;
 
         await userStore.createPayment({
-          receiver_email: receiverEmail.value,
+          receiver_email: paymentType.value === 'user' ? receiverEmail.value : null,
           amount: Number(amount.value),
           description: description.value
         });
@@ -192,62 +223,19 @@ export default {
 
     return {
       receiverEmail,
+      mobileNumber,
       amount,
       description,
       error,
-      loadingMessage,
-      successNotificationMessage,
       loading,
+      loadingMessage,
       showSuccessNotification,
+      successNotificationMessage,
+      paymentType,
       makePayment,
       goToDashboard,
       userStore
     };
-  }
+  },
 };
 </script>
-
-<style scoped>
-.from-goldColor {
-  --tw-gradient-from: #D4AF37;
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(212 175 55 / 0));
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-/* Mobile Responsive Adjustments */
-@media (max-width: 640px) {
-  .max-w-4xl {
-    width: 100%;
-  }
-
-  .p-6 {
-    padding: 1rem;
-  }
-
-  .text-3xl {
-    font-size: 1.5rem;
-  }
-}
-
-/* Input Focus Styles */
-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
-}
-
-/* Smooth Transitions */
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
-}
-</style>

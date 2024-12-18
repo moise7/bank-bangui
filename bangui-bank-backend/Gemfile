@@ -32,6 +32,9 @@ group :development, :test do
   gem "pry"
 end
 
+# sending money api
+gem 'httparty'
+
 group :development do
   gem 'foreman'
   gem "dockerfile-rails", ">= 1.6"

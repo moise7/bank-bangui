@@ -167,29 +167,35 @@
 
     <div class="dashboard-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
       <!-- Payment History Section -->
-      <div class="payment-history bg-gray-100 p-4 rounded-md shadow-md">
-        <h3 class="text-xl font-bold mb-4">Historique des paiements</h3>
-        <div class="flex font-bold border-b-2 border-gray-800 mb-2">
-          <div class="flex-1 text-left py-1">Date</div>
+      <div class="payment-history bg-gray-100 p-6 rounded-xl shadow-lg">
+        <h3 class="text-2xl font-bold text-gray-800 mb-4">Historique des paiements</h3>
+
+        <!-- Table Header -->
+        <div class="flex font-semibold text-gray-700 border-b-2 border-gray-800 mb-2">
+          <div class="flex-1 text-left py-2">Date</div>
           <div class="flex-1 text-left py-2">Nom</div>
           <div class="flex-1 text-left py-2">Description</div>
           <div class="flex-1 text-left py-2">Montant</div>
         </div>
 
+        <!-- Payment History List -->
         <ul class="list-none p-0">
           <li
             v-for="(payment, index) in userStore.payments"
             :key="payment.id"
-            :class="{'bg-gray-200': index % 2 === 0, 'bg-white': index % 2 !== 0}"
-            class="flex py-3 border-b border-gray-300"
+            :class="{'bg-gray-100': index % 2 === 0, 'bg-white': index % 2 !== 0}"
+            class="flex py-4 border-b border-gray-300"
           >
-            <div class="flex-1">{{ new Date(payment.created_at).toLocaleDateString('fr-FR') }}</div>
-            <div class="flex-1">{{ payment.recipient_first_name }} {{ payment.recipient_last_name }}</div>
-            <div class="flex-1">{{ payment.description }}</div>
-            <div class="flex-1">{{ userStore.formattedAmount(payment.amount) }}</div>
+            <div class="flex-1 text-sm text-gray-800">{{ new Date(payment.created_at).toLocaleDateString('fr-FR') }}</div>
+            <div class="flex-1 text-sm text-gray-800">
+              {{ payment.recipient_first_name }}
+            </div>
+            <div class="flex-1 text-sm text-gray-800">{{ payment.description }}</div>
+            <div class="flex-1 text-sm text-gray-800">{{ userStore.formattedAmount(payment.amount) }}</div>
           </li>
         </ul>
       </div>
+
 
       <!-- Budget Progress Section -->
       <div class="budget-progress bg-gray-100 p-4 rounded-md shadow-md">
