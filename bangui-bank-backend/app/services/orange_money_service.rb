@@ -1,19 +1,31 @@
-# app/services/orange_money_service.rb
 class OrangeMoneyService
   include HTTParty
-  base_uri 'https://api.orange.com'
+  base_uri ENV['ORANGE_MONEY_API_URL'] || 'https://test-emoney-services.w-ha.com/api'
 
   def initialize
-    @client_id = ENV['ORANGE_MONEY_CLIENT_ID']
-    @client_secret = ENV['ORANGE_MONEY_CLIENT_SECRET']
+    credentials = Rails.application.credentials.orange_money
+    @client_id = credentials[:client_id]
+    @client_secret = credentials[:client_secret]
   end
 
+
   def authenticate
-    response = self.class.post("/oauth/v2/token", body: {
-      grant_type: 'client_credentials',
-      client_id: @client_id,
-      client_secret: @client_secret
-    })
+    auth = Base64.strict_encode64("#{@client_id}:#{@client_secret}")
+    puts "Generated Auth Header: Basic #{auth}"
+
+    response = self.class.post('/oauth/v2/token',
+      body: { grant_type: 'client_credentials' },
+      headers: {
+        'Content-Type' => 'application/x-www-form-urlencoded',
+        'Authorization' => "Basic #{Base64.strict_encode64("#{client_id}:#{client_secret}")}"
+      }
+    )
+
+    puts "Request URL: #{self.class.base_uri}/oauth/v2/token"
+    puts "Request Headers: #{response.request.options[:headers]}"
+    puts "Request Body: #{response.request.options[:body]}"
+    puts "Response Code: #{response.code}"
+    puts "Response Body: #{response.body}"
 
     if response.success?
       response.parsed_response['access_token']
@@ -22,14 +34,18 @@ class OrangeMoneyService
     end
   end
 
+
   def create_payment(amount, phone_number, access_token)
-    response = self.class.post("/payment", headers: {
-      'Authorization' => "Bearer #{access_token}",
-      'Content-Type' => 'application/json'
-    }, body: {
-      amount: amount,
-      phone_number: phone_number
-    }.to_json)
+    response = self.class.post('/payment',
+      headers: {
+        'Authorization' => "Bearer #{access_token}",
+        'Content-Type' => 'application/json'
+      },
+      body: {
+        amount: amount,
+        phone_number: phone_number
+      }.to_json
+    )
 
     if response.success?
       response.parsed_response

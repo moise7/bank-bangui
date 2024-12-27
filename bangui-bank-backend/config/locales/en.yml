@@ -28,4 +28,6 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  greeting: "Hello"
+  welcome_message: "Welcome to our app!"
+

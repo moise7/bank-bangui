@@ -1,10 +1,10 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex flex-col items-center justify-center py-8 px-4">
     <div class="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-      <h2 class="text-2xl font-bold mb-6">Réinitialiser votre mot de passe</h2>
+      <h2 class="text-2xl font-bold mb-6">{{ $t('reset_password') }}</h2>
 
-       <!-- Success Message -->
-       <transition
+      <!-- Success Message -->
+      <transition
         enter-active-class="transform ease-out duration-300 transition"
         enter-from-class="translate-y-2 opacity-0"
         enter-to-class="translate-y-0 opacity-100"
@@ -19,10 +19,10 @@
             </div>
             <div class="ml-3">
               <p class="text-sm font-medium text-green-800">
-                Instructions envoyées !
+                {{ $t('instructions_sent') }}
               </p>
               <p class="mt-1 text-sm text-green-700">
-                Veuillez vérifier votre boîte de réception pour réinitialiser votre mot de passe.
+                {{ $t('check_your_inbox') }}
               </p>
             </div>
           </div>
@@ -36,15 +36,16 @@
             </div>
             <div class="ml-3">
               <p class="text-sm font-medium text-green-800">
-                Mot de passe réinitialisé !
+                {{ $t('password_reset_success') }}
               </p>
               <p class="mt-1 text-sm text-green-700">
-                Votre mot de passe a été modifié avec succès. Vous allez être redirigé vers la page de connexion.
+                {{ $t('password_changed_successfully') }}
               </p>
             </div>
           </div>
         </div>
       </transition>
+
       <!-- Error Message -->
       <transition
         enter-active-class="transform ease-out duration-300 transition"
@@ -66,15 +67,11 @@
         </div>
       </transition>
 
-      <div v-if="error" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
-        {{ error }}
-      </div>
-
       <form @submit.prevent="handleReset" v-if="!showSuccess">
         <input
           type="password"
           v-model="newPassword"
-          placeholder="Nouveau mot de passe"
+          :placeholder="$t('new_password_placeholder')"
           class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
           required
           minlength="6"
@@ -82,7 +79,7 @@
         <input
           type="password"
           v-model="confirmPassword"
-          placeholder="Confirmer le mot de passe"
+          :placeholder="$t('confirm_password_placeholder')"
           class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
           required
           minlength="6"
@@ -92,7 +89,7 @@
           class="w-full py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
           :disabled="isResetting"
         >
-          {{ isResetting ? 'Réinitialisation...' : 'Réinitialiser' }}
+          {{ isResetting ? $t('resetting') : $t('reset') }}
         </button>
       </form>
     </div>

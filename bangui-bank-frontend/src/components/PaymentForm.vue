@@ -27,8 +27,8 @@
     <div class="max-w-4xl mx-auto mt-8">
       <!-- Header -->
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Transfert d'argent</h1>
-        <p class="text-gray-600">Envoyez de l'argent à un autre membre de Bangui Bank</p>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ $t('money_transfer') }}</h1>
+        <p class="text-gray-600">{{ $t('send_money_description') }}</p>
       </div>
 
       <!-- Form Card -->
@@ -37,7 +37,7 @@
           <!-- Balance Information -->
           <div class="bg-gray-50 rounded-lg p-4 mb-6">
             <div class="flex justify-between items-center">
-              <span class="text-gray-600">Solde disponible:</span>
+              <span class="text-gray-600">{{ $t('available_balance') }}:</span>
               <span class="text-xl font-bold text-gray-800">
                 {{ userStore.user?.balance || '0.00' }} €
               </span>
@@ -46,15 +46,15 @@
 
           <!-- Payment Type Selection -->
           <div class="space-y-4">
-            <label class="block text-sm font-medium text-gray-700">Type de transfert</label>
+            <label class="block text-sm font-medium text-gray-700">{{ $t('transfer_type') }}</label>
             <div class="flex items-center gap-6">
               <div>
                 <input type="radio" id="user-transfer" value="user" v-model="paymentType" />
-                <label for="user-transfer" class="text-gray-700">Envoyer vers un autre utilisateur</label>
+                <label for="user-transfer" class="text-gray-700">{{ $t('send_to_user') }}</label>
               </div>
               <div>
                 <input type="radio" id="mobile-wallet" value="mobile" v-model="paymentType" />
-                <label for="mobile-wallet" class="text-gray-700">Envoyer vers un porte-monnaie mobile</label>
+                <label for="mobile-wallet" class="text-gray-700">{{ $t('send_to_mobile_wallet') }}</label>
               </div>
             </div>
           </div>
@@ -62,7 +62,7 @@
           <!-- Receiver Email (Visible if 'user' is selected) -->
           <div v-if="paymentType === 'user'" class="space-y-2">
             <label for="receiver-email" class="block text-sm font-medium text-gray-700">
-              Email du destinataire
+              {{ $t('receiver_email') }}
             </label>
             <div class="relative">
               <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -74,20 +74,20 @@
             </div>
           </div>
 
-          <!-- Mobile Wallet Information (Commented Out) -->
+          <!-- Mobile Wallet Information -->
           <div v-if="paymentType === 'mobile'" class="space-y-2 text-center py-6 bg-gray-50 rounded-lg shadow-md">
             <p class="text-2xl font-bold text-gray-800">
-              Fonctionnalité à venir
+              {{ $t('feature_coming_soon') }}
             </p>
             <p class="text-lg text-gray-600">
-              Cette option sera bientôt disponible.
+              {{ $t('feature_coming_soon_description') }}
             </p>
           </div>
 
           <!-- Amount -->
           <div class="space-y-2">
             <label for="amount" class="block text-sm font-medium text-gray-700">
-              Montant à envoyer
+              {{ $t('amount_to_send') }}
             </label>
             <div class="relative">
               <i class="fas fa-coins absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -104,7 +104,7 @@
           <!-- Description -->
           <div class="space-y-2">
             <label for="description" class="block text-sm font-medium text-gray-700">
-              Description
+              {{ $t('description') }}
             </label>
             <div class="relative">
               <i class="fas fa-comment absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -112,7 +112,7 @@
                      v-model="description"
                      required
                      class="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-goldColor focus:border-transparent"
-                     placeholder="Motif du transfert" />
+                     placeholder="{{ $t('transfer_reason') }}" />
             </div>
           </div>
 
@@ -130,13 +130,13 @@
             <button type="submit"
                     class="flex-1 bg-goldColor hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
               <i class="fas fa-paper-plane"></i>
-              Envoyer
+              {{ $t('send') }}
             </button>
             <button @click="goToDashboard"
                     type="button"
                     class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
               <i class="fas fa-arrow-left"></i>
-              Retour au tableau de bord
+              {{ $t('back_to_dashboard') }}
             </button>
           </div>
         </form>
@@ -146,7 +146,7 @@
       <div class="mt-8 text-center text-sm text-gray-600">
         <p class="flex items-center justify-center gap-2">
           <i class="fas fa-shield-alt"></i>
-          Vos transactions sont sécurisées et cryptées
+          {{ $t('secure_transactions') }}
         </p>
       </div>
     </div>
@@ -164,7 +164,6 @@ export default {
     const router = useRouter();
     const userStore = useUserStore();
     const receiverEmail = ref('');
-    const mobileNumber = ref('');
     const amount = ref('');
     const description = ref('');
     const error = ref('');
@@ -223,7 +222,6 @@ export default {
 
     return {
       receiverEmail,
-      mobileNumber,
       amount,
       description,
       error,

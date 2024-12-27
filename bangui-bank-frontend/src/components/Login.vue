@@ -1,6 +1,6 @@
 <template>
   <div class="login bg-gray-100 min-h-screen flex flex-col items-center justify-center py-8 px-4 font-mona">
-    <h3 class="text-3xl font-extrabold text-gray-700 mb-6">Content de vous revoir !</h3>
+    <h3 class="text-3xl font-extrabold text-gray-700 mb-6">{{ $t('welcome_back') }}</h3>
 
     <!-- Success Message -->
     <transition
@@ -22,10 +22,10 @@
         </div>
         <div class="ml-3">
           <p class="text-sm font-medium text-green-800">
-            Instructions envoyées !
+            {{ $t('instructions_sent') }}
           </p>
           <p class="mt-1 text-sm text-green-700">
-            Veuillez vérifier votre boîte de réception pour réinitialiser votre mot de passe.
+            {{ $t('check_your_inbox') }}
           </p>
         </div>
       </div>
@@ -41,13 +41,13 @@
         class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
         type="text"
         v-model="loginUsername"
-        placeholder="Nom d'utilisateur"
+        :placeholder="$t('username_placeholder')"
       />
       <input
         type="password"
         class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
         v-model="loginPassword"
-        placeholder="Mot de passe"
+        :placeholder="$t('password_placeholder')"
       />
       <div class="flex justify-end mb-4">
         <button
@@ -55,25 +55,25 @@
           @click="showResetModal = true"
           class="text-sm text-yellow-500 hover:text-yellow-600"
         >
-          Mot de passe oublié ?
+          {{ $t('forgot_password') }}
         </button>
       </div>
       <input
         type="submit"
-        value="Se connecter"
+        :value="$t('login')"
         class="w-full py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-300 cursor-pointer"
       />
     </form>
 
-     <!-- Password Reset Modal -->
-     <div v-if="showResetModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+    <!-- Password Reset Modal -->
+    <div v-if="showResetModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div class="bg-white rounded-lg p-6 w-full max-w-md">
-        <h4 class="text-xl font-bold mb-4">Réinitialiser le mot de passe</h4>
+        <h4 class="text-xl font-bold mb-4">{{ $t('reset_password') }}</h4>
         <form @submit.prevent="requestPasswordReset">
           <input
             type="email"
             v-model="resetEmail"
-            placeholder="Votre adresse email"
+            :placeholder="$t('your_email')"
             class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
             required
           />
@@ -83,14 +83,14 @@
               @click="closeResetModal"
               class="px-4 py-2 text-gray-600 hover:text-gray-800"
             >
-              Annuler
+              {{ $t('cancel') }}
             </button>
             <button
               type="submit"
               class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
               :disabled="isResetting"
             >
-              {{ isResetting ? 'Envoi...' : 'Envoyer' }}
+              {{ isResetting ? $t('sending') : $t('send') }}
             </button>
           </div>
         </form>
@@ -101,12 +101,12 @@
       {{ loginError }}
     </div>
     <p class="text-gray-600 mt-6">
-      Vous n'avez pas de compte ?
+      {{ $t('no_account') }}
       <router-link
         to="/signup"
         class="text-yellow-500 font-semibold hover:underline hover:text-yellow-600 transition-colors duration-300"
       >
-        Inscrivez-vous
+        {{ $t('signup') }}
       </router-link>
     </p>
   </div>

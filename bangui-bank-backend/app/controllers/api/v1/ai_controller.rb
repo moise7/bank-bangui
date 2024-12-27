@@ -13,3 +13,18 @@ class AIController < ApplicationController
     render json: { advice: ai_response.dig("choices", 0, "message", "content") }
   end
 end
+
+
+
+Basic NnBiTWF6QzFhV0RuZ25VNjA3SlZmdlVsaW1Yc0YzN3I6S0xsaHJJSWlSSlFZWW1OTXB2N2JuVWQ0V1o5SDlycTlIaHNhUzE0THlCbzk=
+
+curl -X GET -H "Authorization: Bearer NnBiTWF6QzFhV0RuZ25VNjA3SlZmdlVsaW1Yc0YzN3I6S0xsaHJJSWlSSlFZWW1OTXB2N2JuVWQ0V1o5SDlycTlIaHNhUzE0THlCbzk="
+"https://api.orange.com/3legged/sandbox/fr/v1/userinfo/"
+
+
+curl -X POST
+-H "Authorization: Basic NnBiTWF6QzFhV0RuZ25VNjA3SlZmdlVsaW1Yc0YzN3I6S0xsaHJJSWlSSlFZWW1OTXB2N2JuVWQ0V1o5SDlycTlIaHNhUzE0THlCbzk="
+-H "Content-Type: application/x-www-form-urlencoded"
+-H "Accept:application/json"
+-d "grant_type=client_credentials"
+https://api.orange.com/oauth/v3/token

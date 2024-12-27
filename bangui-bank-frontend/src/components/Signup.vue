@@ -1,13 +1,13 @@
 <template>
   <div class="signup bg-gray-200 min-h-screen flex flex-col items-center justify-center p-4">
-    <h3 class="text-2xl font-bold mb-6">Inscription</h3>
+    <h3 class="text-2xl font-bold mb-6">{{ $t('signup') }}</h3>
     <form @submit="onSignUp" class="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
       <!-- First Name -->
       <input
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="text"
         v-model="firstName"
-        placeholder="Prénom *"
+        :placeholder="$t('first_name_placeholder')"
         required
       />
 
@@ -16,7 +16,7 @@
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="text"
         v-model="middleName"
-        placeholder="Deuxième Prénom (optionnel)"
+        :placeholder="$t('middle_name_placeholder')"
       />
 
       <!-- Last Name -->
@@ -24,7 +24,7 @@
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="text"
         v-model="lastName"
-        placeholder="Nom de Famille *"
+        :placeholder="$t('last_name_placeholder')"
         required
       />
 
@@ -37,7 +37,7 @@
             v-model="dateOfBirth"
             :min="minDate"
             :max="maxDate"
-            :placeholder="'JJ/MM/AAAA *'"
+            :placeholder="$t('date_placeholder')"
             required
           />
           <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
@@ -52,32 +52,32 @@
         v-model="country"
         required
       >
-        <option disabled value="">Sélectionnez un Pays *</option>
+        <option disabled value="">{{ $t('select_country') }}</option>
         <option value="République Centrafricaine">République Centrafricaine</option>
       </select>
 
       <!-- Town Dropdown -->
       <div v-if="country === 'République Centrafricaine'" class="relative">
-      <select
-        class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-        v-model="town"
-        :disabled="isLoadingTowns"
-      >
-        <option disabled value="">
-          {{ isLoadingTowns ? 'Chargement des villes...' : 'Sélectionnez une Ville' }}
-        </option>
-        <option v-for="townItem in towns" :key="townItem" :value="townItem">
-          {{ townItem }}
-        </option>
-      </select>
+        <select
+          class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          v-model="town"
+          :disabled="isLoadingTowns"
+        >
+          <option disabled value="">
+            {{ isLoadingTowns ? $t('loading_towns') : $t('select_town') }}
+          </option>
+          <option v-for="townItem in towns" :key="townItem" :value="townItem">
+            {{ townItem }}
+          </option>
+        </select>
 
-      <!-- Loading indicator -->
-      <div v-if="isLoadingTowns" class="absolute right-3 top-1/2 -translate-y-1/2">
-        <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-      </div>
+        <!-- Loading indicator -->
+        <div v-if="isLoadingTowns" class="absolute right-3 top-1/2 -translate-y-1/2">
+          <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </div>
       </div>
 
       <!-- Phone Number -->
@@ -85,7 +85,7 @@
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="text"
         v-model="phoneNumber"
-        placeholder="Numéro de Téléphone *"
+        :placeholder="$t('phone_number_placeholder')"
         required
       />
 
@@ -95,20 +95,23 @@
         type="text"
         id="username"
         v-model="username"
-        placeholder="Nom d'utilisateur *"
+        :placeholder="$t('username_placeholder')"
         @focus="showUsernameExample = true"
         @blur="showUsernameExample = false"
         required
       />
       <div v-if="showUsernameExample" class="username-example">
-        <p>Exemple d'un bon nom d'utilisateur :</p>
+        <p>{{ $t('username_example') }}:</p>
         <p><strong>{{ generateUsernameExample() }}</strong></p>
-        <p>Conseils pour un nom d'utilisateur fort :</p>
+        <p>{{ $t('username_tips') }}</p>
         <ul>
-          <li>Incluez à la fois des lettres et des chiffres</li>
-          <li>Évitez d'utiliser votre nom complet</li>
-          <li>Envisagez d'ajouter des caractères spéciaux comme '_' ou '-' </li>
+          <li>{{ $t('username_tip_1') }}</li>
+          <li>{{ $t('username_tip_2') }}</li>
+          <li>{{ $t('username_tip_3') }}</li>
         </ul>
+        <p>{{ $t('username_best_practice_1') }}</p>
+        <p>{{ $t('username_best_practice_2') }}</p>
+        <p>{{ $t('username_best_practice_3') }}</p>
       </div>
 
       <!-- Email -->
@@ -116,51 +119,51 @@
         class="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="email"
         v-model="email"
-        placeholder="Email *"
+        :placeholder="$t('email_placeholder')"
         required
       />
 
       <!-- Password -->
-    <label for="password" class="block text-gray-700 font-medium mb-2">Mot de Passe *</label>
-    <input
-      id="password"
-      class="w-full p-3 mb-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-      type="password"
-      v-model="password"
-      placeholder="Mot de Passe *"
-      @input="evaluateStrength"
-      required
-    />
-    <!-- Password Strength Meter -->
-    <div class="w-full h-2 bg-gray-300 rounded mb-2">
-      <div
-        :class="strengthClass"
-        :style="{ width: strengthPercentage + '%' }"
-        class="h-full rounded transition-all duration-300"
-      ></div>
-    </div>
-    <p class="text-sm mb-4" :class="messageClass">{{ strengthMessage }}</p>
+      <label for="password" class="block text-gray-700 font-medium mb-2">{{ $t('password_label') }}</label>
+      <input
+        id="password"
+        class="w-full p-3 mb-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        type="password"
+        v-model="password"
+        :placeholder="$t('password_placeholder')"
+        @input="evaluateStrength"
+        required
+      />
+      <!-- Password Strength Meter -->
+      <div class="w-full h-2 bg-gray-300 rounded mb-2">
+        <div
+          :class="strengthClass"
+          :style="{ width: strengthPercentage + '%' }"
+          class="h-full rounded transition-all duration-300"
+        ></div>
+      </div>
+      <p class="text-sm mb-4" :class="messageClass">{{ strengthMessage }}</p>
 
-    <!-- Confirm Password -->
-    <label for="passwordConfirmation" class="block text-gray-700 font-medium mb-2">Confirmez le Mot de Passe *</label>
-    <input
-      id="passwordConfirmation"
-      class="w-full p-3 mb-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-      type="password"
-      v-model="passwordConfirmation"
-      placeholder="Confirmez le Mot de Passe *"
-      @input="validatePasswordMatch"
-      required
-    />
-    <!-- Password Match Validation -->
-    <p v-if="passwordError" class="text-red-500 text-sm">{{ passwordError }}</p>
+      <!-- Confirm Password -->
+      <label for="passwordConfirmation" class="block text-gray-700 font-medium mb-2">{{ $t('confirm_password_label') }}</label>
+      <input
+        id="passwordConfirmation"
+        class="w-full p-3 mb-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        type="password"
+        v-model="passwordConfirmation"
+        :placeholder="$t('confirm_password_placeholder')"
+        @input="validatePasswordMatch"
+        required
+      />
+      <!-- Password Match Validation -->
+      <p v-if="passwordError" class="text-red-500 text-sm">{{ passwordError }}</p>
 
       <!-- Submit Button -->
       <button
         type="submit"
         class="w-full py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-300 font-semibold cursor-pointer"
       >
-        S'inscrire
+        {{ $t('signup') }}
       </button>
     </form>
 
@@ -171,12 +174,12 @@
 
     <!-- Link to Login -->
     <p class="text-gray-600 mt-4">
-      Vous avez déjà un compte ?
+      {{ $t('already_have_account') }}
       <router-link
         to="/login"
         class="text-yellow-500 font-semibold hover:underline hover:text-yellow-600 transition-colors duration-300"
       >
-        Connectez-vous
+        {{ $t('login') }}
       </router-link>
     </p>
   </div>
@@ -337,8 +340,25 @@ export default {
 
     // Add the generateUsernameExample method here
     const generateUsernameExample = () => {
-      const randomNum = Math.floor(Math.random() * 1000);
-      return `${username.value || 'Utilisateur'}_${randomNum}`;
+      const randomNum = Math.floor(Math.random() * 100); // Two digits
+      const baseUsername = username.value || 'Utilisateur';
+
+      // Check if the base username ends with an underscore
+      const endsWithUnderscore = baseUsername.endsWith('_');
+      const endsWithNumber = /\d+$/;
+
+      // If the base username ends with a number, return it as is
+      if (endsWithNumber.test(baseUsername)) {
+        return baseUsername; // Return the base username without adding another number
+      }
+
+      // If the base username ends with an underscore, append the random number without adding another underscore
+      if (endsWithUnderscore) {
+        return `${baseUsername}${randomNum}`; // Append the random number directly
+      }
+
+      // Otherwise, append an underscore and the random number
+      return `${baseUsername}_${randomNum}`;
     };
 
     return {
