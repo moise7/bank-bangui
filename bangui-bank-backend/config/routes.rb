@@ -72,6 +72,16 @@ Rails.application.routes.draw do
   #   end
   # end
 
+  namespace :api do
+    namespace :v1 do
+      resources :accounts do
+        collection do
+          post 'create_savings_account' # Route for creating a savings account
+        end
+      end
+    end
+  end
+
   # Other API route
   namespace :api do
     get 'check-username', to: 'users#check_username'

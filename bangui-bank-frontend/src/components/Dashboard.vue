@@ -73,6 +73,17 @@
           <option value="CFA">{{ t('cfa') }}</option>
         </select>
       </div>
+      <!-- Account Number Display -->
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-lg font-semibold">Account Number:</span>
+        <div class="relative flex items-center">
+          <span v-if="!showFullAccountNumber" class="text-gray-500 account-number">{{ maskedAccountNumber }}</span>
+          <span v-else class="text-gray-800 account-number">{{ userStore.user.account_number }}</span>
+          <button @click="toggleAccountNumber" class="ml-2 text-sm text-goldColor hover:underline">
+            {{ showFullAccountNumber ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+      </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-gradient-to-r from-goldColor to-yellow-600 p-6 rounded-lg text-white">
@@ -152,7 +163,7 @@
             </div>
           </div>
         </div>
-        <router-link to="/budget" class="text-sm text-goldColor hover:text-black transition-colors">{{ t('view_full_budget') }}</router-link>
+        <router-link to="/education/budget-tracker" class="text-sm text-goldColor hover:text-black transition-colors">{{ t('view_full_budget') }}</router-link>
       </div>
 
       <div class="calculator-and-calendar space-y-4">
@@ -185,8 +196,22 @@ export default {
   setup() {
     const userStore = useUserStore();
     const router = useRouter();
-    const { t, locale } = useI18n(); // Get the translation function and current locale
+    const { t, locale } = useI18n();
 
+    // State to manage account number visibility
+    const showFullAccountNumber = ref(false);
+    // Computed property to mask the account number
+    const maskedAccountNumber = computed(() => {
+      if (userStore.user && userStore.user.account_number) {
+        const accountNumber = userStore.user.account_number;
+        return '****' + accountNumber.slice(-4); // Show only the last 4 digits
+      }
+      return '';
+    });
+    // Method to toggle account number visibility
+    const toggleAccountNumber = () => {
+      showFullAccountNumber.value = !showFullAccountNumber.value;
+    };
     // Initialize currentDate with the current date
     const currentDate = ref(new Date());
 
@@ -225,6 +250,11 @@ export default {
           { label: t('financial_tools'), icon: 'fas fa-tools' },
           { label: t('card_control'), icon: 'fas fa-credit-card' },
           { label: t('send_money'), icon: 'fas fa-paper-plane' },
+          {
+            label: t('budget_tracker'),
+            icon: 'fas fa-chart-pie',
+            route: '/education/budget-tracker'
+          }
         ]
       },
       {
@@ -249,7 +279,12 @@ export default {
             label: t('digital_services'),
             icon: 'fas fa-mobile-alt',
             route: '/education/digital-banking'
-          }
+          },
+          {
+            label: t('financial_education'),
+            icon: 'fas fa-graduation-cap',
+            route: '/education/financial-literacy'
+          },
         ]
       },
       {
@@ -283,6 +318,7 @@ export default {
       await userStore.fetchUserData();
       await userStore.fetchPayments();
       await userStore.fetchExchangeRates();
+      console.log(userStore.fetchUserData())
     });
 
     return {
@@ -294,29 +330,11 @@ export default {
       calendarDates,
       t,
       router,
+      maskedAccountNumber,
+      showFullAccountNumber,
+      toggleAccountNumber,
     };
   },
-  // computed: {
-  //   currentMonthYear() {
-  //     return this.currentDate.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
-  //   },
-  //   calendarDates() {
-  //     const year = this.currentDate.getFullYear();
-  //     const month = this.currentDate.getMonth();
-  //     const firstDay = new Date(year, month, 1);
-  //     const lastDay = new Date(year, month + 1, 0);
-
-  //     const dates = [];
-  //     const daysToIncludeBefore = firstDay.getDay();
-  //     const daysToIncludeAfter = 6 - lastDay.getDay();
-
-  //     for (let i = -daysToIncludeBefore; i < lastDay.getDate() + daysToIncludeAfter; i++) {
-  //       dates.push(new Date(year, month, i + 1));
-  //     }
-
-  //     return dates;
-  //   },
-  // },
   methods: {
     previousMonth() {
       this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1);
@@ -335,9 +353,9 @@ export default {
     },
     handleMobileNavClick(item) {
       this.isMobileMenuOpen = false;
-      if (item.label === t('logout')) {
+      if (item.label === this.t('logout')) {
         this.handleLogout();
-      } else if (item.label === t('send_money')) {
+      } else if (item.label === this.t('send_money')) {
         this.$router.push('/payment-form');
       } else if (item.route) {
         this.$router.push(item.route);
@@ -355,6 +373,9 @@ export default {
 </script>
 
 <style scoped>
+.account-number {
+  margin-left: 0.25rem; /* Adjust this value as needed */
+}
 .visible {
   visibility: visible;
 }

@@ -13,6 +13,7 @@ import SecurityAwareness from '../components/SecurityAwareness.vue';
 import DigitalBanking from '../components/DigitalBanking.vue';
 import BudgetGraph from '../components/BudgetGraph.vue';
 import GoalTracker from '../components/GoalTracker.vue';
+import BudgetTracker from '../components/BudgetTracker.vue';
 
 const routes = [
   { path: '/', component: Home },
@@ -52,6 +53,12 @@ const routes = [
         component: BudgetGraph,
         name: 'budget-graph',
         meta: { title: 'Services Numériques' }
+      },
+      {
+        path: 'budget-tracker',
+        component: BudgetTracker,
+        name: 'budget-tracker',
+        meta: { title: 'Budget Tracker' }
       },
       {
         path: 'goal-tracker',

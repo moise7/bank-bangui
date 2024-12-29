@@ -3,58 +3,41 @@
     <div class="max-w-4xl mx-auto">
       <!-- Header Section -->
       <div class="bg-goldColor rounded-lg p-6 mb-8 text-white shadow-lg">
-        <h1 class="text-2xl md:text-4xl font-bold mb-4">
-          Éducation Financière
-        </h1>
-        <p class="text-lg opacity-90">
-          Les bases essentielles pour une meilleure gestion de vos finances
-        </p>
+        <h1 class="text-2xl md:text-4xl font-bold mb-4">{{ $t('financial_education') }}</h1>
+        <p class="text-lg opacity-90">{{ $t('financial_literacy_description') }}</p>
       </div>
 
-      <!-- Learning Modules -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div v-for="(module, index) in learningModules"
-             :key="index"
-             class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-        >
-          <div class="h-40 bg-gradient-to-r from-goldColor to-yellow-600 p-6">
-            <i :class="[module.icon, 'text-white text-4xl mb-4']"></i>
-            <h2 class="text-xl font-bold text-white">{{ module.title }}</h2>
-          </div>
-          <div class="p-6">
-            <ul class="space-y-3">
-              <li v-for="(point, idx) in module.points"
-                  :key="idx"
-                  class="flex items-start space-x-3"
-              >
-                <i class="fas fa-check text-goldColor mt-1"></i>
-                <span class="text-gray-700">{{ point }}</span>
-              </li>
+      <!-- Key Topics Section -->
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold mb-4">{{ $t('key_topics_in_financial_education') }}</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div v-for="(module, index) in learningModules" :key="index" class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-semibold mb-2">{{ $t(module.title) }}</h3>
+            <ul>
+              <li v-for="(point, idx) in module.points" :key="idx">{{ $t(point) }}</li>
             </ul>
           </div>
         </div>
       </div>
 
-      <!-- Financial Tools -->
+      <!-- Financial Tools Section -->
       <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 class="text-2xl font-bold mb-6">Outils de Calcul Financier</h2>
+        <h2 class="text-2xl font-bold mb-6">{{ $t('financial_tools') }}</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Budget Calculator -->
           <div class="border rounded-lg p-4">
-            <h3 class="font-semibold mb-4">Calculateur de Budget</h3>
+            <h3 class="font-semibold mb-4">{{ $t('budget_tracker') }}</h3>
             <div class="space-y-4">
               <div>
-                <label class="block text-sm text-gray-600 mb-1">Revenu Mensuel</label>
-                <input type="number" v-model="budget.income"
-                       class="w-full p-2 border rounded focus:ring-2 focus:ring-goldColor">
+                <label class="block text-sm text-gray-600 mb-1">{{ $t('total_budget') }}</label>
+                <input type="number" v-model="budget.income" class="w-full p-2 border rounded focus:ring-2 focus:ring-goldColor">
               </div>
               <div>
-                <label class="block text-sm text-gray-600 mb-1">Dépenses Fixes</label>
-                <input type="number" v-model="budget.expenses"
-                       class="w-full p-2 border rounded focus:ring-2 focus:ring-goldColor">
+                <label class="block text-sm text-gray-600 mb-1">{{ $t('amount_spent') }}</label>
+                <input type="number" v-model="budget.expenses" class="w-full p-2 border rounded focus:ring-2 focus:ring-goldColor">
               </div>
               <div class="bg-gray-100 p-3 rounded">
-                <p class="font-semibold">Épargne Possible:</p>
+                <p class="font-semibold">{{ $t('amount_spent') }}:</p>
                 <p class="text-xl text-goldColor">{{ calculateSavings }} €</p>
               </div>
             </div>
@@ -62,20 +45,18 @@
 
           <!-- Savings Goals -->
           <div class="border rounded-lg p-4">
-            <h3 class="font-semibold mb-4">Objectifs d'Épargne</h3>
+            <h3 class="font-semibold mb-4">{{ $t('savings') }}</h3>
             <div class="space-y-4">
               <div>
-                <label class="block text-sm text-gray-600 mb-1">Objectif (€)</label>
-                <input type="number" v-model="savings.goal"
-                       class="w-full p-2 border rounded focus:ring-2 focus:ring-goldColor">
+                <label class="block text-sm text-gray-600 mb-1">{{ $t('goal') }} (€)</label>
+                <input type="number" v-model="savings.goal" class="w-full p-2 border rounded focus:ring-2 focus:ring-goldColor">
               </div>
               <div>
-                <label class="block text-sm text-gray-600 mb-1">Épargne Mensuelle</label>
-                <input type="number" v-model="savings.monthly"
-                       class="w-full p-2 border rounded focus:ring-2 focus:ring-goldColor">
+                <label class="block text-sm text-gray-600 mb-1">{{ $t('monthly_savings') }}</label>
+                <input type="number" v-model="savings.monthly" class="w-full p-2 border rounded focus:ring-2 focus:ring-goldColor">
               </div>
               <div class="bg-gray-100 p-3 rounded">
-                <p class="font-semibold">Temps nécessaire:</p>
+                <p class="font-semibold">{{ $t('time_needed') }}:</p>
                 <p class="text-xl text-goldColor">{{ calculateTimeToGoal }}</p>
               </div>
             </div>
@@ -83,20 +64,18 @@
         </div>
       </div>
 
-      <!-- Financial Tips -->
+      <!-- Financial Tips Section -->
       <div class="bg-gradient-to-r from-goldColor to-yellow-600 rounded-lg p-6 text-white">
-        <h2 class="text-xl font-bold mb-4">Conseils Financiers du Jour</h2>
+        <h2 class="text-xl font-bold mb-4">{{ $t('daily_tips') }}</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div v-for="(tip, index) in dailyTips"
-               :key="index"
-               class="bg-white bg-opacity-20 p-4 rounded-lg"
-          >
+          <div v-for="(tip, index) in dailyTips" :key="index" class="bg-white bg-opacity-20 p-4 rounded-lg">
             <p class="text-sm">{{ tip }}</p>
           </div>
         </div>
       </div>
 
-      <div class="mt-8 bg-gradient-to-r from-goldColor to-yellow-600 rounded-lg p-6 text-white text-center">
+      <!-- Conditionally Rendered Financial Journey Section -->
+      <div v-if="!isUserLoggedIn" class="mt-8 bg-gradient-to-r from-goldColor to-yellow-600 rounded-lg p-6 text-white text-center">
         <h3 class="text-xl md:text-2xl font-bold mb-3">
           Prêt à commencer votre voyage financier ?
         </h3>
@@ -118,45 +97,111 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
 export default {
   name: 'FinancialLiteracy',
+  setup() {
+    const { t } = useI18n();
+    return {
+      t,
+    };
+  },
   data() {
     return {
       learningModules: [
         {
-          icon: 'fas fa-piggy-bank',
-          title: 'Bases de l\'Épargne',
+          title: 'what_is_budgeting',
           points: [
-            'Comprendre les différents types de comptes d\'épargne',
-            'Stratégies d\'épargne automatique',
-            'Comment définir des objectifs d\'épargne réalistes'
+            'budgeting_description'
           ]
         },
         {
-          icon: 'fas fa-chart-pie',
-          title: 'Gestion Budgétaire',
+          title: 'why_budgeting_is_important',
           points: [
-            'Création d\'un budget mensuel',
-            'Suivi des dépenses',
-            'Identification des dépenses superflues'
+            'budgeting_importance_description'
           ]
         },
         {
-          icon: 'fas fa-coins',
-          title: 'Investissement',
+          title: 'the_50_30_20_rule',
           points: [
-            'Principes de base de l\'investissement',
-            'Diversification du portefeuille',
-            'Comprendre les risques et rendements'
+            'the_50_30_20_rule_description'
           ]
         },
         {
-          icon: 'fas fa-university',
-          title: 'Crédit et Endettement',
+          title: 'credit_and_debt_management',
           points: [
-            'Comprendre votre score de crédit',
-            'Gestion responsable du crédit',
-            'Stratégies de remboursement de dettes'
+            'understanding_credit',
+            'building_good_credit',
+            'managing_debt'
+          ]
+        },
+        {
+          title: 'investing',
+          points: [
+            'what_is_investing',
+            'types_of_investments',
+            'risk_and_return'
+          ]
+        },
+        {
+          title: 'banking_services',
+          points: [
+            'opening_a_bank_account',
+            'types_of_bank_accounts',
+            'benefits_of_using_a_bank'
+          ]
+        },
+        {
+          title: 'insurance',
+          points: [
+            'what_is_insurance',
+            'types_of_insurance',
+            'why_you_need_insurance'
+          ]
+        },
+        {
+          title: 'retirement_planning',
+          points: [
+            'why_plan_for_retirement',
+            'retirement_savings_accounts',
+            'start_early'
+          ]
+        },
+        {
+          title: 'financial_goal_setting',
+          points: [
+            'short_term_goals',
+            'long_term_goals',
+            'smart_goals'
+          ]
+        },
+        {
+          title: 'taxation',
+          points: [
+            'what_are_taxes',
+            'types_of_taxes',
+            'tax_planning'
+          ]
+        },
+        {
+          title: 'tips_for_improving_financial_knowledge',
+          points: [
+            'stay_informed',
+            'take_courses',
+            'consult_with_financial_advisors',
+            'use_financial_tools'
+          ]
+        },
+        {
+          title: 'why_financial_education_is_important',
+          points: [
+            'financial_stability',
+            'better_decision_making',
+            'debt_avoidance',
+            'empowerment'
           ]
         }
       ],
@@ -178,12 +223,12 @@ export default {
   },
   computed: {
     calculateSavings() {
-      return (this.budget.income - this.budget.expenses).toFixed(2)
+      return (this.budget.income - this.budget.expenses).toFixed(2);
     },
     calculateTimeToGoal() {
-      if (!this.savings.monthly || !this.savings.goal) return '0 mois'
-      const months = Math.ceil(this.savings.goal / this.savings.monthly)
-      return `${months} mois`
+      if (!this.savings.monthly || !this.savings.goal) return '0 mois';
+      const months = Math.ceil(this.savings.goal / this.savings.monthly);
+      return `${months} mois`;
     }
   }
 }

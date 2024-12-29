@@ -27,7 +27,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                 </svg>
               </button>
-              <div v-if="isLanguageMenuOpen" class="absolute right-0 mt-2 w-48 bg-black text-white rounded-lg shadow-lg">
+              <div v-if="isLanguageMenuOpen" class="absolute right-0 mt-2 w-48 bg-black text-white rounded-lg shadow-lg z-50">
                 <button @click="changeLanguage('fr')" class="block px-4 py-2 text-sm w-full text-left hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
                   Français
                 </button>
@@ -40,11 +40,23 @@
 
           <!-- Mobile Menu Button Area -->
           <div class="sm:hidden flex items-center gap-2">
-            <router-link to="/signup" custom v-slot="{ navigate }">
-              <button @click="navigate" type="button" class="py-2 px-3 text-sm font-medium rounded-lg border border-goldColor bg-goldColor text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-200">
-                {{ $t('signup') }}
+            <!-- Language Dropdown for Mobile -->
+            <div class="relative">
+              <button @click="toggleLanguageMenu" type="button" class="py-1 px-2 inline-flex items-center gap-x-1 text-sm font-medium rounded-lg border border-white bg-goldColor text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-200">
+                <span>{{ currentLanguage === 'fr' ? 'Français' : 'English' }}</span>
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
               </button>
-            </router-link>
+              <div v-if="isLanguageMenuOpen" class="absolute right-0 mt-1 w-32 bg-black text-white rounded-lg shadow-lg z-50">
+                <button @click="changeLanguage('fr')" class="block px-2 py-1 text-xs w-full text-left hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
+                  Français
+                </button>
+                <button @click="changeLanguage('en')" class="block px-2 py-1 text-xs w-full text-left hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
+                  English
+                </button>
+              </div>
+            </div>
 
             <button type="button" @click="isMenuOpen = !isMenuOpen" class="relative size-8 flex justify-center items-center rounded-lg border border-white text-white hover:bg-white hover:text-black transition duration-200">
               <svg class="shrink-0 size-4" :class="{ 'hidden': isMenuOpen }" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
@@ -62,11 +74,14 @@
               </svg>
               <span class="font-medium">{{ $t('login') }}</span>
             </router-link>
+            <router-link @click="isMenuOpen = false" to="/signup" class="text-white px-6 py-4 hover:bg-white/10 transition-all duration-200 flex items-center space-x-3">
+              <span class="font-medium">{{ $t('signup') }}</span>
+            </router-link>
+
           </div>
         </div>
       </nav>
     </header>
-
     <div class="bg-gradient-to-r from-black to-goldColor py-8 sm:py-16 animate__animated animate__fadeInRight">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 items-center px-4 sm:px-8 mx-auto max-w-screen-xl">
         <div class="flex flex-col justify-center items-start -mt-6">
@@ -115,6 +130,44 @@
           <p class="text-base sm:text-lg font-mona text-white/90 leading-relaxed">
             {{ $t('easy_to_use_description') }}
           </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Financial Literacy Section -->
+    <div class="relative bg-white py-16 lg:py-24 overflow-hidden">
+      <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+      <div class="relative max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-12 md:gap-x-16 items-center">
+          <div class="order-1 md:order-1 animate__animated animate__fadeInLeft">
+            <div class="relative group">
+              <div class="absolute -inset-2 bg-gradient-to-r from-goldColor/20 to-amber-500/20 rounded-xl blur-xl group-hover:blur-2xl transition duration-500"></div>
+              <div class="relative overflow-hidden rounded-2xl shadow-2xl">
+                <img src="../assets/images/man-holding-card.png" alt="Financial Literacy" class="w-full h-auto transform transition duration-700 group-hover:scale-105" loading="lazy">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="order-2 md:order-2 animate__animated animate__fadeInRight">
+            <div class="space-y-6">
+              <span class="inline-block px-4 py-1 rounded-full bg-goldColor/10 text-goldColor text-sm font-semibold tracking-wide">
+                {{ $t('financial_education') }}
+              </span>
+              <h2 class="text-3xl md:text-4xl font-bold font-mona bg-gradient-to-r from-goldColor to-amber-500 bg-clip-text text-transparent">
+                {{ $t('financial_literacy_title') }}
+              </h2>
+              <p class="text-gray-600 text-lg leading-relaxed font-mona">
+                {{ $t('financial_literacy_description') }}
+              </p>
+              <router-link to="/education/financial-literacy" class="group inline-flex items-center gap-2 px-6 py-3 bg-goldColor text-black rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-goldColor/30 transform hover:-translate-y-0.5">
+                <span>{{ $t('read_more') }}</span>
+                <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </router-link>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -416,5 +469,38 @@ export default {
 @keyframes blurPulse {
   0%, 100% { filter: blur(0px); }
   50% { filter: blur(4px); }
+}
+
+/* Add this to your existing styles */
+.absolute {
+  position: absolute;
+}
+
+.z-50 {
+  z-index: 50; /* Ensure the dropdown appears above other elements */
+}
+
+.mt-2 {
+  margin-top: 0.5rem; /* Space between the button and dropdown */
+}
+
+.w-48 {
+  width: 12rem; /* Set a fixed width for the dropdown */
+}
+
+.bg-black {
+  background-color: black; /* Background color for the dropdown */
+}
+
+.text-white {
+  color: white; /* Text color for the dropdown items */
+}
+
+.rounded-lg {
+  border-radius: 0.5rem; /* Rounded corners for the dropdown */
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Shadow for dropdown */
 }
 </style>

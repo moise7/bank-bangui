@@ -3,6 +3,7 @@ class Api::V1::UsersController < ApplicationController
 
   def user_data
     formatted_balance = format('%.2f', @current_user.balance)
+    account = @current_user.account
     render json: {
       user: {
         email: @current_user.email,
@@ -15,7 +16,8 @@ class Api::V1::UsersController < ApplicationController
         created_at: @current_user.created_at,
         username: @current_user.username,
         balance: formatted_balance,
-        phone_number: @current_user.phone_number
+        phone_number: @current_user.phone_number,
+        account_number: account&.account_number
       }
     }
   rescue => e

@@ -213,6 +213,19 @@ export const useUserStore = defineStore('user', {
         return false;
       }
     },
+
+    async createSavingsAccount() {
+      try {
+        const response = await axios.post('/api/v1/accounts/create_savings_account', {}, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}` // Include the user's token for authentication
+          }
+        });
+        console.log('Savings account created:', response.data);
+      } catch (error) {
+        console.error('Error creating savings account:', error.response.data);
+      }
+    }
     // async fetchBudgetProgress() {
     //   if (!this.token || !this.userId) {
     //     console.error('No token or user ID found, please login');

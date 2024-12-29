@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   # Associations
+  has_one  :account
   has_many :payments
   has_many :transactions
   has_many :budgets

@@ -21,7 +21,7 @@ class OrangeMoneyService
       }
     )
 
-    puts "Request URL: #{self.class.base_uri}/oauth/v2/token"
+    puts "Request U RL: #{self.class.base_uri}/oauth/v2/token"
     puts "Request Headers: #{response.request.options[:headers]}"
     puts "Request Body: #{response.request.options[:body]}"
     puts "Response Code: #{response.code}"

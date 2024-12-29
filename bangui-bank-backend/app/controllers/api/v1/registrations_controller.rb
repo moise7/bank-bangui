@@ -4,6 +4,7 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
   def create
     user = User.new(sign_up_params)
     if user.save
+      Account.create(user: user, account_type: 'checking') # This will generate the account number
       # Ensure jti is generated and set
       jti = user.jti
       token = JwtService.encode(user_id: user.id, jti: jti)
